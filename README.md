@@ -48,8 +48,8 @@ API Documentation: [nocturne.onrender.com/api/docs](https://nocturne.onrender.co
 | Name | Role |
 |------|------|
 | **Kyung Hun Oh** | Backend — Auth, Spots API, TourAPI seed |
-| **Kwon Do Hun** | Backend — Likes/Comments/Bookmarks, Testing, CI |
-| **Gun Woo Kim** | Frontend — Map, UI, Responsive design |
+| **Gun Woo Kim** | Backend — Likes/Comments/Bookmarks, Testing, CI |
+| **Do hun kwon** | Frontend — Map, UI, Responsive design |
 
 ---
 
