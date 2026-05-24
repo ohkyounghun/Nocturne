@@ -1,14 +1,40 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+/**
+ * @swagger
+ * /api/spots:
+ *   get:
+ *     summary: List all spots
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+router.get('/', (req, res) => {
     res.json([
         { id: 1, title: 'seoultech', latitude: 37.55, longitude: 126.98 },
         { id: 2, title: 'boongabang', latitude: 34.55, longitude: 132.98 }
     ])
 });
 
-router.get('/:id', async (req, res) => {
+/**
+ * @swagger
+ * /api/spots/{id}:
+ *   get:
+ *     summary: Get a spot by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Success
+ *       404:
+ *         description: Spot not found
+ */
+router.get('/:id', (req, res) => {
     const { id } = req.params;
     const numId = parseInt(id);
     if (numId > 3) {
