@@ -73,6 +73,8 @@ async function initDb() {
             UNIQUE (spot_id, user_id)
         );
     `);
+
+    return db;
 }
 
 module.exports = { initDb };
