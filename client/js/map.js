@@ -10,13 +10,28 @@ function initMap() {
     return new kakao.maps.Map(container, options);
 }
 
+// Render spot cards below map
+function renderCards(spots) {
+    const list = document.getElementById('spot-list');
+    list.innerHTML = '';
+
+    spots.forEach(spot => {
+        const li = document.createElement('li');
+        li.className = 'spot-card';
+        li.textContent = spot.title;
+        li.addEventListener('click', () => {
+            window.location.href = `detail.html?id=${spot.id}`;
+        });
+        list.appendChild(li);
+    });
+}
+
 // Render spot pins on map
 async function renderPins(map) {
     const spots = await getSpots();
 
     spots.forEach(spot => {
         const position = new kakao.maps.LatLng(spot.latitude, spot.longitude);
-
         const marker = new kakao.maps.Marker({ map, position });
 
         // click marker → go to detail page
@@ -24,6 +39,8 @@ async function renderPins(map) {
             window.location.href = `detail.html?id=${spot.id}`;
         });
     });
+
+    renderCards(spots);
 }
 
 // Entry point
