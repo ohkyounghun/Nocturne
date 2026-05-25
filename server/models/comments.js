@@ -3,6 +3,8 @@ const { getDb } = require("../db/database");
 async function getBySpot(spotId) {
     const db = getDb();
 
+    // 오래된 댓글부터 보여줘서 대화 흐름을 자연스럽게 유지한다.
+    // Show older comments first to keep the conversation flow natural.
     return db.all(
         `
         SELECT

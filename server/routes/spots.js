@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const commentsController = require('../controllers/commentsController');
 
+// 비동기 라우트 에러를 Express 에러 핸들러로 넘긴다.
+// Forward async route errors to the Express error handler.
 function asyncHandler(handler) {
     return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
 }
