@@ -1,5 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const commentsController = require('../controllers/commentsController');
+
+// 비동기 라우트 에러를 Express 에러 핸들러로 넘긴다.
+// Forward async route errors to the Express error handler.
+function asyncHandler(handler) {
+    return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
+}
 
 /**
  * @swagger
@@ -16,6 +23,25 @@ router.get('/', (req, res) => {
         { id: 2, title: 'boongabang', latitude: 34.55, longitude: 132.98 }
     ])
 });
+
+/**
+ * @swagger
+ * /api/spots/{id}/comments:
+ *   get:
+ *     summary: List comments for a spot
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Success
+ *       400:
+ *         description: Invalid spot id
+ */
+router.get('/:id/comments', asyncHandler(commentsController.listBySpot));
 
 /**
  * @swagger

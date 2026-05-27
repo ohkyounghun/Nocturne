@@ -77,4 +77,14 @@ async function initDb() {
     return db;
 }
 
-module.exports = { initDb };
+function getDb() {
+    if (!db) {
+        throw new Error("Database has not been initialized. Call initDb() first.");
+    }
+
+    // 앱 시작 시 초기화한 DB 연결을 모델 레이어에서 공유한다.
+    // Share the DB connection initialized at app startup with model modules.
+    return db;
+}
+
+module.exports = { initDb, getDb };
