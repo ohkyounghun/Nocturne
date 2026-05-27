@@ -27,6 +27,12 @@ function renderComments(commentList, comments) {
     });
 }
 
+function renderCommentError(commentList) {
+    const item = document.createElement("li");
+    item.textContent = "Comments could not be loaded.";
+    commentList.replaceChildren(item);
+}
+
 export function initCommentThread() {
     // 댓글 UI 초기화 진입점이다.
     // Entry point for initializing the comment UI.
@@ -41,5 +47,5 @@ export function initCommentThread() {
 
     void loadComments(spotId)
         .then((comments) => renderComments(commentList, comments))
-        .catch(() => {});
+        .catch(() => renderCommentError(commentList));
 }
