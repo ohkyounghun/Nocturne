@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nocturne — Discover Seoul After Dark</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Header / Nav -->
+<header class="header">
+    <a href="index.html" class="logo">NOCTURNE</a>
+    <nav class="nav">
+        <a href="login.html" id="nav-login">Login</a>
+        <a href="register.html" id="nav-register">Register</a>
+        <a href="bookmarks.html" id="nav-bookmarks" class="hidden">Bookmarks</a>
+        <button id="nav-logout" class="hidden">Logout</button>
+    </nav>
+</header>
+
+<!-- Map -->
+<main>
+    <div id="map"></div>
+</main>
+
+<!-- Season Filter -->
+<section class="filter-bar">
+    <button class="filter-btn active" data-season="all">All</button>
+    <button class="filter-btn" data-season="spring">Spring</button>
+    <button class="filter-btn" data-season="summer">Summer</button>
+    <button class="filter-btn" data-season="autumn">Autumn</button>
+    <button class="filter-btn" data-season="winter">Winter</button>
+</section>
+
+<!-- Spot Card List -->
+<section class="spot-list" id="spot-list">
+    <!-- spot cards rendered by map.js -->
+</section>
+
+<!-- Scripts -->
+<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=044be88492300dfc62dc2972cc1d9eef"></script>
+<script type="module" src="js/map.js"></script>
+
+</body>
+</html>
