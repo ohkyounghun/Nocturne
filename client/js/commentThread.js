@@ -1,6 +1,12 @@
+import { getComments } from "./api.js";
+
 function getSpotIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get("id");
+}
+
+async function loadComments(spotId) {
+    return getComments(spotId);
 }
 
 export function initCommentThread() {
@@ -14,4 +20,6 @@ export function initCommentThread() {
     if (!spotId || !commentList || !commentInput || !commentButton) {
         return;
     }
+
+    void loadComments(spotId).catch(() => {});
 }
