@@ -1,4 +1,4 @@
-import { getComments } from "./api.js";
+import { getComments, postComment } from "./api.js";
 
 function getSpotIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
@@ -33,6 +33,23 @@ function renderCommentError(commentList) {
     commentList.replaceChildren(item);
 }
 
+async function refreshComments(spotId, commentList) {
+    const comments = await loadComments(spotId);
+    renderComments(commentList, comments);
+}
+
+async function handleCommentSubmit({ spotId, commentList, commentInput }) {
+    const content = commentInput.value.trim();
+
+    if (!content) {
+        return;
+    }
+
+    await postComment(spotId, content);
+    commentInput.value = "";
+    await refreshComments(spotId, commentList);
+}
+
 export function initCommentThread() {
     // 댓글 UI 초기화 진입점이다.
     // Entry point for initializing the comment UI.
@@ -45,7 +62,11 @@ export function initCommentThread() {
         return;
     }
 
-    void loadComments(spotId)
-        .then((comments) => renderComments(commentList, comments))
+    void refreshComments(spotId, commentList)
         .catch(() => renderCommentError(commentList));
+
+    commentButton.addEventListener("click", () => {
+        void handleCommentSubmit({ spotId, commentList, commentInput })
+            .catch(() => renderCommentError(commentList));
+    });
 }
