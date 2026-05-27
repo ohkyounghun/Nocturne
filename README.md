@@ -11,9 +11,9 @@ Nocturne is a community platform for discovering and sharing night view spots in
 
 ## 🔗 Live Demo
 
-**[nocturne.onrender.com](https://nocturne.onrender.com)**
+*Coming soon — will be deployed to Render*
 
-API Documentation: [nocturne.onrender.com/api/docs](https://nocturne.onrender.com/api/docs)
+<!-- TODO: Update with actual URL after deployment -->
 
 ---
 
@@ -47,7 +47,7 @@ API Documentation: [nocturne.onrender.com/api/docs](https://nocturne.onrender.co
 
 | Name | Role |
 |------|------|
-| **Kyung Hun Oh** | Backend — Auth, Spots API, TourAPI seed |
+| **Kyung Hun Oh** | Backend — Auth, Spots API, Initial spots seed data |
 | **Gun Woo Kim** | Backend — Likes/Comments/Bookmarks, Testing, CI |
 | **Do hun kwon** | Frontend — Map, UI, Responsive design |
 
@@ -79,8 +79,7 @@ npm run dev
 ```env
 PORT=3000
 JWT_SECRET=your_jwt_secret
-TOUR_API_KEY=your_tourapi_key
-KAKAO_MAP_KEY=your_kakao_map_key
+KAKAO_API_KEY=your_kakao_api_key
 ```
 
 ### Run Tests
