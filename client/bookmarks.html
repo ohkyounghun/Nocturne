@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookmarks — Nocturne</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Header / Nav -->
+<header class="header">
+    <a href="index.html" class="logo">NOCTURNE</a>
+    <nav class="nav">
+        <a href="login.html" id="nav-login">Login</a>
+        <a href="register.html" id="nav-register">Register</a>
+        <a href="bookmarks.html" id="nav-bookmarks" class="hidden">Bookmarks</a>
+        <button id="nav-logout" class="hidden">Logout</button>
+    </nav>
+</header>
+
+<!-- Bookmarks -->
+<main class="bookmarks-container">
+    <h1>My Bookmarks</h1>
+
+    <!-- bookmark count filled by bookmarks.js -->
+    <p id="bookmark-count"></p>
+
+    <!-- bookmark cards rendered by bookmarks.js -->
+    <ul id="bookmark-list"></ul>
+
+</main>
+
+<!-- Scripts -->
+<script type="module" src="js/bookmarks.js"></script>
+
+</body>
+</html>

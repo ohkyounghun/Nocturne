@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spot Detail — Nocturne</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Header / Nav -->
+<header class="header">
+    <a href="index.html" class="logo">NOCTURNE</a>
+    <nav class="nav">
+        <a href="login.html" id="nav-login">Login</a>
+        <a href="register.html" id="nav-register">Register</a>
+        <a href="bookmarks.html" id="nav-bookmarks" class="hidden">Bookmarks</a>
+        <button id="nav-logout" class="hidden">Logout</button>
+    </nav>
+</header>
+
+<!-- Spot Hero Image -->
+<section class="spot-hero">
+    <!-- src filled by spotDetail.js -->
+    <img id="spot-image" src="" alt="Spot image">
+</section>
+
+<!-- Spot Info -->
+<section class="spot-info">
+    <!-- filled by spotDetail.js -->
+    <h1 id="spot-title"></h1>
+    <div class="spot-tags">
+        <span id="spot-season"></span>
+        <span id="spot-weather"></span>
+    </div>
+    <div class="spot-stats">
+        <!-- counts filled by spotDetail.js -->
+        <span id="spot-likes"></span>
+        <span id="spot-comments"></span>
+    </div>
+    <p id="spot-description"></p>
+
+    <!-- Like & Bookmark buttons -->
+    <div class="spot-actions">
+        <button id="btn-like">Like</button>
+        <button id="btn-bookmark">Bookmark</button>
+    </div>
+</section>
+
+<!-- Comments -->
+<section class="comments">
+    <h2>Comments</h2>
+    <ul id="comment-list">
+        <!-- comments rendered by spotDetail.js -->
+    </ul>
+    <div class="comment-form">
+        <!-- label required for accessibility, hidden visually -->
+        <label for="comment-input" class="hidden">Comment</label>
+        <textarea id="comment-input" placeholder="Add a comment..."></textarea>
+        <button id="btn-comment">Post</button>
+    </div>
+</section>
+
+<!-- Scripts -->
+<script type="module" src="js/spotDetail.js"></script>
+
+</body>
+</html>
