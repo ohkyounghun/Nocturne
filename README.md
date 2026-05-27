@@ -2,7 +2,7 @@
 
 > Discover Seoul after dark
 
-[![CI](https://github.com/ohkyounghun/nocturne/actions/workflows/ci.yml/badge.svg)](https://github.com/ohkyounghun/nocturne/actions)
+[![CI](https://github.com/ohkyounghun/Nocturne/actions/workflows/test.yml/badge.svg)](https://github.com/ohkyounghun/Nocturne/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Nocturne is a community platform for discovering and sharing night view spots in Seoul. Explore spots on an interactive map, submit your own hidden gems, and connect with others who love the city after dark.
