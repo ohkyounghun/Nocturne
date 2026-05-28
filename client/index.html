@@ -39,8 +39,18 @@
 </section>
 
 <!-- Scripts -->
-<script type="text/javascript" src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=044be88492300dfc62dc2972cc1d9eef"></script>
-<script type="module" src="js/map.js"></script>
+<!-- Kakao Maps SDK — key loaded dynamically from config.js -->
+<script type="module">
+    import { KAKAO_MAP_KEY } from './js/config.js';
+    const script = document.createElement('script');
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false`;
+    script.onload = () => {
+        kakao.maps.load(() => {
+            import('./js/map.js');
+        });
+    };
+    document.head.appendChild(script);
+</script>
 
 </body>
 </html>
