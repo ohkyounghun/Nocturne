@@ -41,7 +41,7 @@ a:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 32px;
+    padding: 16px 24px;
     background-color: #070a14;
     border-bottom: 1px solid #c9a84c;
 }
@@ -55,7 +55,7 @@ a:hover {
 
 .nav {
     display: flex;
-    gap: 24px;
+    gap: 16px;
     align-items: center;
 }
 
@@ -73,7 +73,7 @@ a:hover {
     background: none;
     border: 1px solid #c9a84c;
     color: #c9a84c;
-    padding: 6px 14px;
+    padding: 6px 12px;
     cursor: pointer;
     font-size: 0.85rem;
     letter-spacing: 1px;
@@ -90,7 +90,7 @@ a:hover {
    ------------------------------------------------------------ */
 #map {
     width: 100%;
-    height: 60vh;
+    height: 55vh;
 }
 
 /* ------------------------------------------------------------
@@ -99,23 +99,30 @@ a:hover {
 .filter-bar {
     display: flex;
     gap: 8px;
-    padding: 16px 24px;
+    padding: 12px 16px;
     background-color: #070a14;
     border-bottom: 1px solid #1a2040;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.filter-bar::-webkit-scrollbar {
+    display: none;
 }
 
 .filter-btn {
-    padding: 6px 16px;
+    padding: 6px 14px;
     background: none;
     border: 1px solid #2a3060;
     color: #b0a898;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     letter-spacing: 1px;
     text-transform: uppercase;
     white-space: nowrap;
     transition: all 0.2s;
+    flex-shrink: 0;
 }
 
 .filter-btn:hover {
@@ -164,7 +171,7 @@ a:hover {
    ------------------------------------------------------------ */
 .auth-container {
     max-width: 360px;
-    margin: 80px auto;
+    margin: 60px auto;
     padding: 0 24px;
 }
 
@@ -239,17 +246,16 @@ a:hover {
    ------------------------------------------------------------ */
 .spot-hero img {
     width: 100%;
-    height: 320px;
+    height: 240px;
     object-fit: cover;
 }
 
 .spot-info {
-    padding: 32px;
-    max-width: 720px;
+    padding: 20px;
 }
 
 .spot-info h1 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 500;
     margin-bottom: 12px;
 }
@@ -258,6 +264,7 @@ a:hover {
     display: flex;
     gap: 8px;
     margin: 12px 0;
+    flex-wrap: wrap;
 }
 
 .spot-tags span {
@@ -273,16 +280,18 @@ a:hover {
 
 .spot-stats {
     display: flex;
-    gap: 24px;
-    margin: 16px 0;
+    gap: 16px;
+    margin: 12px 0;
     color: #666680;
     font-size: 0.85rem;
+    flex-wrap: wrap;
 }
 
 .spot-actions {
     display: flex;
     gap: 12px;
-    margin: 20px 0;
+    margin: 16px 0;
+    flex-wrap: wrap;
 }
 
 .spot-actions button {
@@ -306,9 +315,8 @@ a:hover {
    Comments
    ------------------------------------------------------------ */
 .comments {
-    padding: 32px;
+    padding: 20px;
     border-top: 1px solid #1a2040;
-    max-width: 720px;
 }
 
 .comments h2 {
@@ -377,7 +385,7 @@ a:hover {
    Bookmarks
    ------------------------------------------------------------ */
 .bookmarks-container {
-    padding: 32px;
+    padding: 20px;
 }
 
 .bookmarks-container h1 {
@@ -415,7 +423,21 @@ a:hover {
     }
 
     #map {
-        height: 70vh;
+        height: 65vh;
+    }
+
+    .spot-info {
+        padding: 32px;
+        max-width: 720px;
+    }
+
+    .comments {
+        padding: 32px;
+        max-width: 720px;
+    }
+
+    .spot-hero img {
+        height: 320px;
     }
 }
 
@@ -429,5 +451,9 @@ a:hover {
 
     #bookmark-list {
         grid-template-columns: repeat(3, 1fr);
+    }
+
+    #map {
+        height: 70vh;
     }
 }
