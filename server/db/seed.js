@@ -9,7 +9,7 @@ async function seed() {
     `);
 
     await db.exec(`
-        INSERT INTO spots (user_id, title, description, latitude, longitude) VALUES
+        INSERT OR IGNORE INTO spots (user_id, title, description, latitude, longitude) VALUES
         (1, 'N Seoul Tower', 'Iconic tower offering panoramic night views over Seoul', 37.5512, 126.9882),
         (1, 'Namsan Park', 'Scenic hillside park with stunning city light views', 37.5498, 126.9907),
         (1, 'Hangang Park Yeouido', 'Riverside park perfect for night picnics with city skyline', 37.5285, 126.9326),
