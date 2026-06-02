@@ -1,6 +1,7 @@
 const sqlite3 = require("sqlite3");
 const sqlite = require("sqlite");
-const DB_FILE = "./nocturne.db";
+const path = require('path');
+const DB_FILE = path.join(__dirname, 'database.db');
 
 let db;
 
