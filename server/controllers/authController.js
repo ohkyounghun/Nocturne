@@ -2,6 +2,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Users = require("../models/users");
 
+const BCRYPT_SALT_ROUNDS = 12;
+const JWT_EXPIRATION = process.env.JWT_EXPIRATION || "7d";
+
 // Register a new user account
 async function register(req, res) {
     const { email, password, username } = req.body || {};
@@ -16,7 +19,7 @@ async function register(req, res) {
 
     try {
         // Hash password before storing — plain text must never reach the database
-        const password_hash = await bcrypt.hash(password, 12);
+        const password_hash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
         const id = await Users.create({ email, password_hash, username });
 
         // Return created user info — never include password or hash in the response
@@ -70,7 +73,7 @@ async function login(req, res) {
     const token = jwt.sign(
         { sub: user.id },
         process.env.JWT_SECRET,
-        { expiresIn: "7d" }
+        { expiresIn: JWT_EXPIRATION }
     );
 
     return res.status(200).json({ token });
