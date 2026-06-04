@@ -1,12 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const commentsController = require('../controllers/commentsController');
-
-// 비동기 라우트 에러를 Express 에러 핸들러로 넘긴다.
-// Forward async route errors to the Express error handler.
-function asyncHandler(handler) {
-    return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
-}
+const asyncHandler = require('../utils/asyncHandler');
 
 /**
  * @swagger
@@ -62,7 +57,10 @@ router.get('/:id/comments', asyncHandler(commentsController.listBySpot));
  */
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    const numId = parseInt(id);
+    const numId = Number.parseInt(id, 10);
+    if (Number.isNaN(numId)) {
+        return res.status(400).json({ code: 'INVALID_SPOT_ID', message: 'Spot id must be a number' });
+    }
     if (numId > 3) {
         return res.status(404).json({ code: 'NOT_FOUND', message: 'Spot not found' });
     }
