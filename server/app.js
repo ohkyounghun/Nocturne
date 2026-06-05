@@ -17,6 +17,12 @@ app.use('/api/spots', spotsRouter);
 
 app.use('/api/auth', authRouter);
 
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json({ code: 'INTERNAL_SERVER_ERROR', message: 'An unexpected error occurred' });
+});
+
 async function start() {
     await initDb();
     app.listen(PORT, () => {

@@ -1,20 +1,9 @@
 const express = require('express');
-const { body } = require('express-validator');
 const router = express.Router();
 const commentsController = require('../controllers/commentsController');
 const spotsController = require('../controllers/spotsController');
 const authenticate = require('../middleware/auth');
-
-function asyncHandler(handler) {
-    return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
-}
-
-const createSpotValidation = [
-    body('title').notEmpty().withMessage('title is required'),
-    body('description').notEmpty().withMessage('description is required'),
-    body('latitude').isFloat({ min: -90, max: 90 }).withMessage('latitude must be a number between -90 and 90'),
-    body('longitude').isFloat({ min: -180, max: 180 }).withMessage('longitude must be a number between -180 and 180'),
-];
+const asyncHandler = require('../utils/asyncHandler');
 
 /**
  * @swagger
@@ -67,7 +56,7 @@ router.get('/', (req, res) => {
  *       401:
  *         description: Unauthorized
  */
-router.post('/', authenticate, createSpotValidation, asyncHandler(spotsController.createSpot));
+router.post('/', authenticate, asyncHandler(spotsController.createSpot));
 
 /**
  * @swagger
@@ -107,7 +96,10 @@ router.get('/:id/comments', asyncHandler(commentsController.listBySpot));
  */
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    const numId = parseInt(id, 10);
+    const numId = Number.parseInt(id, 10);
+    if (Number.isNaN(numId)) {
+        return res.status(400).json({ code: 'INVALID_SPOT_ID', message: 'Spot id must be a number' });
+    }
     if (numId > 3) {
         return res.status(404).json({ code: 'NOT_FOUND', message: 'Spot not found' });
     }
