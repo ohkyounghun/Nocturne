@@ -33,7 +33,8 @@ async function initDb() {
             latitude REAL NOT NULL,
             longitude REAL NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users(id)
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            UNIQUE (user_id, title)
         );
 
         CREATE TABLE IF NOT EXISTS photos (
