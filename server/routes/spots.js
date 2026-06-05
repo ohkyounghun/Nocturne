@@ -4,6 +4,7 @@ const commentsController = require('../controllers/commentsController');
 const spotsController = require('../controllers/spotsController');
 const authenticate = require('../middleware/auth');
 const asyncHandler = require('../utils/asyncHandler');
+const spots = require('../models/spots');
 
 /**
  * @swagger
@@ -14,12 +15,10 @@ const asyncHandler = require('../utils/asyncHandler');
  *       200:
  *         description: Success
  */
-router.get('/', (req, res) => {
-    res.json([
-        { id: 1, title: 'seoultech', latitude: 37.55, longitude: 126.98 },
-        { id: 2, title: 'boongabang', latitude: 34.55, longitude: 132.98 }
-    ]);
-});
+router.get('/', asyncHandler(async (req, res) => {
+    const rows = await spots.findAll();
+    return res.json(rows);
+}));
 
 /**
  * @swagger
@@ -56,7 +55,7 @@ router.get('/', (req, res) => {
  *       401:
  *         description: Unauthorized
  */
-router.post('/', authenticate, asyncHandler(spotsController.createSpot));
+router.post('/', authenticate, asyncHandler(spotsController.create));
 
 /**
  * @swagger
@@ -94,17 +93,17 @@ router.get('/:id/comments', asyncHandler(commentsController.listBySpot));
  *       404:
  *         description: Spot not found
  */
-router.get('/:id', (req, res) => {
-    const { id } = req.params;
-    const numId = Number.parseInt(id, 10);
-    if (Number.isNaN(numId)) {
+router.get('/:id', asyncHandler(async (req, res) => {
+    const id = Number.parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
         return res.status(400).json({ code: 'INVALID_SPOT_ID', message: 'Spot id must be a number' });
     }
-    if (numId > 3) {
+    const spot = await spots.findById(id);
+    if (!spot) {
         return res.status(404).json({ code: 'NOT_FOUND', message: 'Spot not found' });
     }
-    res.json({ id: numId, title: 'spot name', latitude: 37.55, longitude: 126.98 });
-});
+    return res.json(spot);
+}));
 
 /**
  * @swagger
@@ -129,6 +128,6 @@ router.get('/:id', (req, res) => {
  *       404:
  *         description: Spot not found
  */
-router.delete('/:id', authenticate, asyncHandler(spotsController.deleteSpot));
+router.delete('/:id', authenticate, asyncHandler(spotsController.remove));
 
 module.exports = router;
