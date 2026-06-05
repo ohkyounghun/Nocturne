@@ -13,3 +13,19 @@ export function showError(formEl, message) {
 
     errorEl.textContent = message;
 }
+
+// Show success message below a form
+export function showSuccess(formEl, message) {
+    let successEl = document.getElementById('success-message');
+
+    if (!successEl) {
+        successEl = document.createElement('p');
+        successEl.id = 'success-message';
+        successEl.style.color = '#6bce8f';
+        successEl.style.fontSize = '0.85rem';
+        successEl.style.marginTop = '8px';
+        formEl.appendChild(successEl);
+    }
+
+    successEl.textContent = message;
+}
