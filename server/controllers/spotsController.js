@@ -1,44 +1,64 @@
-const { validationResult } = require('express-validator');
-const Spots = require('../models/spots');
+const spots = require("../models/spots");
 
-async function createSpot(req, res) {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+async function create(req, res) {
+    const { title, description, latitude, longitude } = req.body ?? {};
+
+    if (!title || !description || latitude == null || longitude == null) {
         return res.status(400).json({
-            code: 'VALIDATION_ERROR',
-            message: errors.array()[0].msg,
+            code: "VALIDATION_ERROR",
+            message: "title, description, latitude, longitude are required"
         });
     }
 
-    const { title, description, latitude, longitude } = req.body;
-    const spot = await Spots.create({
-        userId: req.user.sub,
+    const lat = Number(latitude);
+    const lng = Number(longitude);
+
+    if (Number.isNaN(lat) || Number.isNaN(lng)) {
+        return res.status(400).json({
+            code: "VALIDATION_ERROR",
+            message: "latitude and longitude must be numbers"
+        });
+    }
+
+    const spot = await spots.create({
+        userId: req.user.id,
         title,
         description,
-        latitude,
-        longitude,
+        latitude: lat,
+        longitude: lng
     });
+
     return res.status(201).json(spot);
 }
 
-async function deleteSpot(req, res) {
-    const { id } = req.params;
-    const numId = parseInt(id, 10);
-    if (isNaN(numId)) {
-        return res.status(400).json({ code: 'VALIDATION_ERROR', message: 'Invalid spot id' });
+async function remove(req, res) {
+    const id = Number.parseInt(req.params.id, 10);
+
+    if (Number.isNaN(id)) {
+        return res.status(400).json({
+            code: "INVALID_SPOT_ID",
+            message: "Spot id must be a number"
+        });
     }
 
-    const spot = await Spots.findById(numId);
+    const spot = await spots.findById(id);
+
     if (!spot) {
-        return res.status(404).json({ code: 'NOT_FOUND', message: 'Spot not found' });
+        return res.status(404).json({
+            code: "NOT_FOUND",
+            message: "Spot not found"
+        });
     }
 
-    if (spot.user_id !== req.user.sub) {
-        return res.status(403).json({ code: 'FORBIDDEN', message: 'Not the owner of this spot' });
+    if (spot.user_id !== req.user.id) {
+        return res.status(403).json({
+            code: "FORBIDDEN",
+            message: "You are not the owner of this spot"
+        });
     }
 
-    await Spots.delete({ spotId: numId, userId: req.user.sub });
+    await spots.delete(id);
     return res.status(204).send();
 }
 
-module.exports = { createSpot, deleteSpot };
+module.exports = { create, remove };
