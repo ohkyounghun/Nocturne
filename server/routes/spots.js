@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const commentsController = require('../controllers/commentsController');
+const likesController = require('../controllers/likesController');
 const spotsController = require('../controllers/spotsController');
 const authenticate = require('../middleware/auth');
 const asyncHandler = require('../utils/asyncHandler');
@@ -75,6 +76,56 @@ router.post('/', authenticate, asyncHandler(spotsController.create));
  *         description: Invalid spot id
  */
 router.get('/:id/comments', asyncHandler(commentsController.listBySpot));
+
+/**
+ * @swagger
+ * /api/spots/{id}/likes:
+ *   post:
+ *     summary: Like a spot
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       201:
+ *         description: Like created
+ *       400:
+ *         description: Invalid spot id
+ *       401:
+ *         description: Unauthorized
+ *       409:
+ *         description: Spot already liked by this user
+ */
+router.post('/:id/likes', authenticate, asyncHandler(likesController.create));
+
+/**
+ * @swagger
+ * /api/spots/{id}/likes:
+ *   delete:
+ *     summary: Remove a like from a spot
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Like removed
+ *       400:
+ *         description: Invalid spot id
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Like not found
+ */
+router.delete('/:id/likes', authenticate, asyncHandler(likesController.remove));
 
 /**
  * @swagger
