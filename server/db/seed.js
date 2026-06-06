@@ -34,9 +34,9 @@ async function seed() {
     ];
 
     const seedImages = [
-        null,
-        null,
-        null,
+        '/uploads/daegu-gangjeong-weir.jpg',
+        '/uploads/ulsan-hwasan-park.png',
+        '/uploads/gangneung-anbandegi.jpeg',
         '/uploads/남산타워.png',
         '/uploads/남산공원.png',
         '/uploads/여의도한강공원.png',
