@@ -108,4 +108,21 @@ describe("API integration", () => {
             message: "You already liked this spot"
         });
     });
+
+    test("POST /api/spots/:id/bookmarks returns 409 for a duplicate bookmark", async () => {
+        const endpoint = `/api/spots/${testSpotId}/bookmarks`;
+        const firstResponse = await request(app)
+            .post(endpoint)
+            .set("Authorization", `Bearer ${authToken}`);
+        const duplicateResponse = await request(app)
+            .post(endpoint)
+            .set("Authorization", `Bearer ${authToken}`);
+
+        expect(firstResponse.status).toBe(201);
+        expect(duplicateResponse.status).toBe(409);
+        expect(duplicateResponse.body).toEqual({
+            code: "ALREADY_BOOKMARKED",
+            message: "You already bookmarked this spot"
+        });
+    });
 });
