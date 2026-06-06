@@ -14,6 +14,16 @@ const countEl = document.getElementById('spot-count');
 const SEASONS = ['all', 'spring', 'summer', 'autumn', 'winter'];
 const WEATHERS = ['clear', 'cloudy', 'rainy', 'snowy'];
 
+// Escape user-supplied values before inserting into innerHTML (XSS prevention)
+function escapeHtml(str) {
+    return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 function tagBtns(values, current, groupClass) {
     return values.map(v =>
         `<button type="button" class="tag-btn ${groupClass} ${v === current ? 'active' : ''}" data-value="${v}">${v.charAt(0).toUpperCase() + v.slice(1)}</button>`
@@ -26,13 +36,13 @@ function renderCard(spot) {
     li.dataset.id = spot.id;
     li.innerHTML = `
         <div class="my-spot-view">
-            ${spot.image_url ? `<div class="my-spot-img-wrap"><img class="spot-card-img" src="${spot.image_url}" alt="${spot.title}"></div>` : ''}
+            ${spot.image_url ? `<div class="my-spot-img-wrap"><img class="spot-card-img" src="${encodeURI(spot.image_url)}" alt="${escapeHtml(spot.title)}"></div>` : ''}
             <div class="my-spot-info">
-                <a href="detail.html?id=${spot.id}" class="my-spot-title">${spot.title}</a>
+                <a href="detail.html?id=${Number(spot.id)}" class="my-spot-title">${escapeHtml(spot.title)}</a>
                 <p class="my-spot-meta">
-                    <span class="tag">${spot.season_tag ?? '—'}</span>
-                    <span class="tag">${spot.weather_tag ?? '—'}</span>
-                    <span class="my-spot-counts">♥ ${spot.like_count ?? 0} &nbsp; 💬 ${spot.comment_count ?? 0}</span>
+                    <span class="tag">${escapeHtml(spot.season_tag ?? '—')}</span>
+                    <span class="tag">${escapeHtml(spot.weather_tag ?? '—')}</span>
+                    <span class="my-spot-counts">♥ ${Number(spot.like_count ?? 0)} &nbsp; 💬 ${Number(spot.comment_count ?? 0)}</span>
                 </p>
             </div>
             <div class="my-spot-actions">
@@ -43,11 +53,11 @@ function renderCard(spot) {
         <form class="my-spot-edit hidden" data-id="${spot.id}">
             <div class="form-field">
                 <label>Title</label>
-                <input type="text" name="title" value="${spot.title}" required>
+                <input type="text" name="title" value="${escapeHtml(spot.title)}" required>
             </div>
             <div class="form-field">
                 <label>Description</label>
-                <textarea name="description" rows="3">${spot.description ?? ''}</textarea>
+                <textarea name="description" rows="3">${escapeHtml(spot.description ?? '')}</textarea>
             </div>
             <div class="form-field">
                 <label>Season</label>

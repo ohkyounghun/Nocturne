@@ -353,6 +353,13 @@ router.post('/:id/photos', authenticate, upload.single('photo'), asyncHandler(as
     if (Number.isNaN(spotId)) {
         return res.status(400).json({ code: 'INVALID_SPOT_ID', message: 'Spot id must be a number' });
     }
+    const spot = await spots.findById(spotId);
+    if (!spot) {
+        return res.status(404).json({ code: 'NOT_FOUND', message: 'Spot not found' });
+    }
+    if (spot.user_id !== req.user.sub) {
+        return res.status(403).json({ code: 'FORBIDDEN', message: 'Not the owner' });
+    }
     if (!req.file) {
         return res.status(400).json({ code: 'NO_FILE', message: 'Image file is required' });
     }
