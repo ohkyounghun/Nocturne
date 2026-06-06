@@ -28,10 +28,27 @@ async function seed() {
         [userId, 'Cheonggyecheon Stream',          'Urban stream lined with colorful light installations at night',   37.5697, 126.9794, 'all',    'clear'],
     ];
 
-    for (const row of spotsData) {
-        await db.run(
+    const seedImages = [
+        'https://picsum.photos/seed/nseoul/800/600',
+        'https://picsum.photos/seed/namsan/800/600',
+        'https://picsum.photos/seed/hangang/800/600',
+        'https://picsum.photos/seed/inwang/800/600',
+        'https://picsum.photos/seed/naksan/800/600',
+        'https://picsum.photos/seed/diamond/800/600',
+        'https://picsum.photos/seed/gwangan/800/600',
+        'https://picsum.photos/seed/songdo/800/600',
+        'https://picsum.photos/seed/jeonju/800/600',
+        'https://picsum.photos/seed/cheong/800/600',
+    ];
+
+    for (let i = 0; i < spotsData.length; i++) {
+        const result = await db.run(
             `INSERT INTO spots (user_id, title, description, latitude, longitude, season_tag, weather_tag) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            row
+            spotsData[i]
+        );
+        await db.run(
+            `INSERT INTO photos (spot_id, user_id, url) VALUES (?, ?, ?)`,
+            [result.lastID, userId, seedImages[i]]
         );
     }
 
