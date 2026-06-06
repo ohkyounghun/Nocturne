@@ -38,6 +38,7 @@ Write endpoints require an `Authorization: Bearer <token>` header.
 | GET    | `/api/spots`                              | —    | List spots                 |
 | GET    | `/api/spots/:id`                          | —    | Get a single spot          |
 | POST   | `/api/spots`                              | yes  | Create a spot              |
+| PATCH  | `/api/spots/:id`                          | yes  | Edit a spot (owner only)   |
 | DELETE | `/api/spots/:id`                          | yes  | Delete a spot (owner only) |
 | GET    | `/api/spots/:id/comments`                 | —    | List comments for a spot   |
 | POST   | `/api/spots/:id/comments`                 | yes  | Add a comment              |
@@ -47,6 +48,8 @@ Write endpoints require an `Authorization: Bearer <token>` header.
 | POST   | `/api/spots/:id/photos`                   | yes  | Upload a photo for a spot  |
 | POST   | `/api/spots/:id/bookmarks`                | yes  | Bookmark a spot            |
 | DELETE | `/api/spots/:id/bookmarks`                | yes  | Remove a bookmark          |
+| GET    | `/api/users/me/spots`                     | yes  | List spots you posted      |
+| GET    | `/api/users/me/likes`                     | yes  | List spots you liked       |
 | GET    | `/api/users/me/bookmarks`                 | yes  | List your bookmarks        |
 
 Interactive API documentation is available at `/api/docs` (Swagger UI) while the server is running.
@@ -58,16 +61,19 @@ client/                 Static frontend (HTML/CSS/JS), served by Express
   index.html            Map view
   detail.html           Spot detail
   post-spot.html        Spot submission form
+  my-spots.html         Manage your own spots (edit/delete)
+  bookmarks.html        Saved spots
   about.html            About page
   login.html
   register.html
-  bookmarks.html
 server/
-  app.js                Express entry point
+  index.js              Server entry point (DB init + listen)
+  app.js                Express app (middleware, routes)
   routes/               Route definitions
   controllers/          Request handlers
   models/               SQL data access
   middleware/auth.js    JWT verification
+  utils/                Shared helpers (async error wrapper)
   db/                   Schema, connection, seed data
 tests/                  Jest + Supertest API tests
 ```
@@ -138,7 +144,24 @@ GitHub Actions runs the same `npm test` command for every pull request targeting
 
 ## AI Use Disclosure
 
-This project was developed with assistance from AI tools (Claude by Anthropic) for ideation, code review, and documentation. All code has been reviewed and is understood by the team.
+AI tools (Claude by Anthropic) were used throughout the project as a coding
+assistant — for ideation, implementation, code review, debugging, and
+documentation. **Every AI-assisted change was reviewed, tested, and is
+understood by the team before merging.**
+
+Areas where AI assistance was most significant:
+
+- **Backend — data & auth:** schema design with foreign-key constraints,
+  JWT/bcrypt authentication, the spots API, and security hardening
+  (stored-XSS escaping, photo-upload IDOR fix, auth rate limiting)
+- **Backend — interactions, tests & CI:** likes/bookmarks conflict handling,
+  Jest/Supertest test suites, and the GitHub Actions pipeline
+- **Frontend — map & UI:** Kakao Maps integration and reverse geocoding,
+  the spot submission and My Spots pages, and responsive layout
+
+A batch of commits during final deployment (the My Spots feature, security
+fixes, and rate limiting) was implemented in a single AI-assisted session and
+reviewed before merging to `main`.
 
 ## License
 
