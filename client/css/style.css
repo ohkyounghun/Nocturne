@@ -724,6 +724,33 @@ a:hover {
 }
 
 /* ------------------------------------------------------------
+   Responsive — mobile (min-width: 480px)
+   ------------------------------------------------------------ */
+@media (max-width: 480px) {
+    .header {
+        padding: 12px 16px;
+    }
+
+    .logo {
+        font-size: 0.9rem;
+        letter-spacing: 4px;
+    }
+
+    .nav-link, #nav-logout {
+        font-size: 0.75rem;
+        letter-spacing: 0;
+    }
+
+    .header-left {
+        gap: 16px;
+    }
+
+    .header-right {
+        gap: 10px;
+    }
+}
+
+/* ------------------------------------------------------------
    Responsive — tablet (min-width: 768px)
    ------------------------------------------------------------ */
 @media (min-width: 768px) {
