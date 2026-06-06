@@ -1,4 +1,5 @@
-import { getSpot, getComments } from './api.js';
+import { getSpot } from './api.js';
+import { initCommentThread } from './commentThread.js';
 
 // Get spot ID from URL query string
 // e.g. detail.html?id=1 → spotId = 1
@@ -23,20 +24,6 @@ async function renderSpot() {
     }
 }
 
-// Render comments
-async function renderComments() {
-    const comments = await getComments(spotId);
-    const list = document.getElementById('comment-list');
-    list.innerHTML = '';
-
-    comments.forEach(comment => {
-        const li = document.createElement('li');
-        li.className = 'comment-item';
-        li.textContent = `${comment.username}: ${comment.content}`;
-        list.appendChild(li);
-    });
-}
-
 // Entry point
 renderSpot();
-renderComments();
+initCommentThread();
