@@ -6,8 +6,22 @@ const SPOT_COLS = `
     (SELECT COUNT(*) FROM comments WHERE spot_id = s.id) AS comment_count
 `;
 
-async function findAll() {
+async function findAll(tag) {
     const db = getDb();
+
+    if (tag) {
+        return db.all(
+            `
+            SELECT ${SPOT_COLS}
+            FROM spots s
+            WHERE LOWER(s.season_tag) = LOWER(?)
+               OR LOWER(s.weather_tag) = LOWER(?)
+            ORDER BY s.created_at DESC
+            `,
+            [tag, tag]
+        );
+    }
+
     return db.all(`SELECT ${SPOT_COLS} FROM spots s ORDER BY s.created_at DESC`);
 }
 
