@@ -22,10 +22,10 @@
   },
   "homepage": "https://github.com/ohkyounghun/Nocturne#readme",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
     "express": "^4.22.2",
-    "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
     "sqlite": "^5.1.1",
     "sqlite3": "^6.0.1"

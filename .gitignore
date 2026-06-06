@@ -7,6 +7,7 @@ package-lock.json
 bower_components
 .grunt
 lib-cov
+client/js/config.js
 
 # =========================
 # Logs
@@ -86,3 +87,9 @@ $RECYCLE.BIN/
 # =========================
 dist/
 build/
+
+# =========================
+# Claude Code
+# =========================
+CLAUDE.md
+.claude/

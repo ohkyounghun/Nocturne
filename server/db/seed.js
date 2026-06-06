@@ -4,12 +4,20 @@ async function seed() {
     const db = await initDb();
 
     await db.exec(`
+        DELETE FROM comments  WHERE spot_id IN (SELECT id FROM spots WHERE user_id = 1);
+        DELETE FROM likes     WHERE spot_id IN (SELECT id FROM spots WHERE user_id = 1);
+        DELETE FROM bookmarks WHERE spot_id IN (SELECT id FROM spots WHERE user_id = 1);
+        DELETE FROM photos    WHERE spot_id IN (SELECT id FROM spots WHERE user_id = 1);
+        DELETE FROM spots WHERE user_id = 1;
+    `);
+
+    await db.exec(`
         INSERT OR IGNORE INTO users (email, password_hash, username)
         VALUES ('seed@nocturne.com', 'seed_hash', 'nocturne_admin');
     `);
 
     await db.exec(`
-        INSERT INTO spots (user_id, title, description, latitude, longitude) VALUES
+        INSERT OR IGNORE INTO spots (user_id, title, description, latitude, longitude) VALUES
         (1, 'N Seoul Tower', 'Iconic tower offering panoramic night views over Seoul', 37.5512, 126.9882),
         (1, 'Namsan Park', 'Scenic hillside park with stunning city light views', 37.5498, 126.9907),
         (1, 'Hangang Park Yeouido', 'Riverside park perfect for night picnics with city skyline', 37.5285, 126.9326),
