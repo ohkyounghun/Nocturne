@@ -14,7 +14,7 @@ async function renderBookmarks() {
 
     // filled by JS — never use innerHTML (XSS prevention)
     count.textContent = `${bookmarks.length} saved spots`;
-    list.innerHTML = '';
+    list.replaceChildren();
 
     if (bookmarks.length === 0) {
         const li = document.createElement('li');
@@ -28,7 +28,7 @@ async function renderBookmarks() {
         li.className = 'spot-card';
         li.textContent = bookmark.title;
         li.addEventListener('click', () => {
-            window.location.href = `detail.html?id=${bookmark.id}`;
+            window.location.href = `detail.html?id=${bookmark.spot_id}`;
         });
         list.appendChild(li);
     });
