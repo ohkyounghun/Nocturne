@@ -1,7 +1,7 @@
 const sqlite3 = require("sqlite3");
 const sqlite = require("sqlite");
 const path = require('path');
-const DB_FILE = path.join(__dirname, 'database.db');
+const DB_FILE = process.env.DB_FILE || path.join(__dirname, 'database.db');
 
 let db;
 
@@ -90,4 +90,13 @@ function getDb() {
     return db;
 }
 
-module.exports = { initDb, getDb };
+async function closeDb() {
+    if (!db) {
+        return;
+    }
+
+    await db.close();
+    db = undefined;
+}
+
+module.exports = { initDb, getDb, closeDb };

@@ -1,10 +1,15 @@
 const bcrypt = require("bcrypt");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
 const request = require("supertest");
 
 process.env.JWT_SECRET = "api-test-secret";
+const testDbFile = path.join(os.tmpdir(), `nocturne-api-${process.pid}.db`);
+process.env.DB_FILE = testDbFile;
 
 const app = require("../server/app");
-const { getDb, initDb } = require("../server/db/database");
+const { closeDb, initDb } = require("../server/db/database");
 
 const TEST_EMAIL = "api-test@nocturne.local";
 const TEST_PASSWORD = "test-password-123";
@@ -26,7 +31,8 @@ describe("API integration", () => {
     });
 
     afterAll(async () => {
-        await getDb().run("DELETE FROM users WHERE email = ?", [TEST_EMAIL]);
+        await closeDb();
+        fs.rmSync(testDbFile, { force: true });
     });
 
     test("POST /api/auth/login returns 200 for valid credentials", async () => {
