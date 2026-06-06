@@ -35,6 +35,10 @@ async function reverseGeocode(lat, lng) {
 const params = new URLSearchParams(window.location.search);
 const spotId = params.get('id');
 
+if (!spotId) {
+    window.location.href = 'index.html';
+}
+
 let isLiked = false;
 let likeCount = 0;
 let isBookmarked = false;

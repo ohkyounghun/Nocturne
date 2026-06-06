@@ -105,6 +105,10 @@ export function initCommentThread() {
         .catch(() => renderCommentError(commentList));
 
     commentButton.addEventListener("click", () => {
+        if (!localStorage.getItem("token")) {
+            window.location.href = "login.html";
+            return;
+        }
         void handleCommentSubmit({ spotId, commentList, commentInput })
             .catch(() => renderCommentError(commentList));
     });
