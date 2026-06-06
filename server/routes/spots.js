@@ -76,7 +76,69 @@ router.post('/', authenticate, asyncHandler(spotsController.create));
  *         description: Invalid spot id
  */
 router.get('/:id/comments', asyncHandler(commentsController.listBySpot));
+
+/**
+ * @swagger
+ * /api/spots/{id}/comments:
+ *   post:
+ *     summary: Create a comment on a spot
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - content
+ *             properties:
+ *               content:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Comment created
+ *       400:
+ *         description: Invalid spot id or comment content
+ *       401:
+ *         description: Unauthorized
+ */
 router.post('/:id/comments', authenticate, asyncHandler(commentsController.create));
+
+/**
+ * @swagger
+ * /api/spots/{spotId}/comments/{commentId}:
+ *   delete:
+ *     summary: Delete a comment owned by the authenticated user
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: spotId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: commentId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Comment deleted
+ *       400:
+ *         description: Invalid spot id or comment id
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Comment not found or not owned by this user
+ */
 router.delete(
     '/:spotId/comments/:commentId',
     authenticate,
