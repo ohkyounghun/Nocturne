@@ -2,7 +2,7 @@ import { createSpot, uploadPhoto } from './api.js';
 import { showError } from './utils.js';
 
 if (!localStorage.getItem('token')) {
-    window.location.replace = 'login.html';
+    window.location.replace('login.html');
 }
 
 const form = document.getElementById('post-form');
@@ -70,6 +70,15 @@ setupTagGroup('weather-group');
 photoInput.addEventListener('change', () => {
     const file = photoInput.files[0];
     if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+        showError(form, 'Photo must be under 5 MB. Please choose a smaller file.');
+        photoInput.value = '';
+        photoPreview.classList.add('hidden');
+        fileNameEl.textContent = 'Choose image…';
+        return;
+    }
+
     fileNameEl.textContent = file.name;
     photoPreview.src = URL.createObjectURL(file);
     photoPreview.classList.remove('hidden');
