@@ -301,7 +301,8 @@ a:hover {
 }
 
 .spot-hero img {
-    width: 700px;
+    width: 720px;
+    max-width: 100%;
     height: auto;
     object-fit: contain;
     display: block;
