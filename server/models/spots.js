@@ -17,13 +17,14 @@ async function findAll(tag) {
             FROM spots s
             WHERE LOWER(s.season_tag) = LOWER(?)
                OR LOWER(s.weather_tag) = LOWER(?)
-            ORDER BY s.created_at DESC
+            ORDER BY s.id DESC
+            LIMIT 10
             `,
             [tag, tag]
         );
     }
 
-    return db.all(`SELECT ${SPOT_COLS} FROM spots s ORDER BY s.created_at DESC`);
+    return db.all(`SELECT ${SPOT_COLS} FROM spots s ORDER BY s.id DESC LIMIT 10`);
 }
 
 async function findById(id) {
