@@ -26,6 +26,13 @@ async function request(method, path, body = null) {
     // Do not parse 204 responses because they intentionally have no body.
     const data = response.status === 204 ? null : await response.json();
 
+    // DB 초기화 등으로 세션 사용자가 사라졌다면 오래된 토큰을 제거한다.
+    // Clear stale credentials when the server no longer recognizes the session user.
+    if (response.status === 401 && localStorage.getItem('token')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+    }
+
     if (!response.ok) throw new Error(data?.message || 'Request failed');
     return data;
 }

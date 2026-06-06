@@ -85,6 +85,30 @@ describe("API integration", () => {
         expect(response.body).toEqual({ code: "UNAUTHORIZED" });
     });
 
+    test("POST /api/spots returns 401 when the token user no longer exists", async () => {
+        const staleToken = jwt.sign(
+            { sub: 999999 },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
+        const response = await request(app)
+            .post("/api/spots")
+            .set("Authorization", `Bearer ${staleToken}`)
+            .send({
+                title: "Stale session spot",
+                description: "This request must not reach the insert",
+                latitude: 37.5,
+                longitude: 127.0
+            });
+
+        expect(response.status).toBe(401);
+        expect(response.body).toEqual({
+            code: "SESSION_EXPIRED",
+            message: "Your session is no longer valid. Please log in again."
+        });
+    });
+
     test("GET /api/spots returns 200 with an array", async () => {
         const response = await request(app).get("/api/spots");
 
