@@ -28,11 +28,30 @@ async function seed() {
         [userId, 'Cheonggyecheon Stream',          'Urban stream lined with colorful light installations at night',   37.5697, 126.9794, 'all',    'clear'],
     ];
 
-    for (const row of spotsData) {
-        await db.run(
+    const seedImages = [
+        '/uploads/남산타워.png',
+        '/uploads/남산공원.png',
+        '/uploads/여의도한강공원.png',
+        '/uploads/인왕산.png',
+        '/uploads/낙산공원.png',
+        '/uploads/부산다이아몬드브릿지.png',
+        '/uploads/광안대교.png',
+        '/uploads/인천송도센트럴파크.png',
+        '/uploads/전주한옥마을.png',
+        '/uploads/청계천.png',
+    ];
+
+    for (let i = 0; i < spotsData.length; i++) {
+        const result = await db.run(
             `INSERT INTO spots (user_id, title, description, latitude, longitude, season_tag, weather_tag) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            row
+            spotsData[i]
         );
+        if (seedImages[i]) {
+            await db.run(
+                `INSERT INTO photos (spot_id, user_id, url) VALUES (?, ?, ?)`,
+                [result.lastID, userId, seedImages[i]]
+            );
+        }
     }
 
     console.log('✅ Seed complete!');

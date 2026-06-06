@@ -3,7 +3,8 @@ const { getDb } = require("../db/database");
 const SPOT_COLS = `
     s.*,
     (SELECT COUNT(*) FROM likes    WHERE spot_id = s.id) AS like_count,
-    (SELECT COUNT(*) FROM comments WHERE spot_id = s.id) AS comment_count
+    (SELECT COUNT(*) FROM comments WHERE spot_id = s.id) AS comment_count,
+    (SELECT url FROM photos WHERE spot_id = s.id ORDER BY created_at ASC LIMIT 1) AS image_url
 `;
 
 async function findAll() {
