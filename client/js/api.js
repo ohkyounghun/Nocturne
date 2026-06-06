@@ -1,4 +1,4 @@
-import { MOCK_SPOTS, MOCK_SPOT_DETAIL, MOCK_COMMENTS, MOCK_BOOKMARKS } from './mock.js';
+import { MOCK_SPOTS, MOCK_SPOT_DETAIL, MOCK_BOOKMARKS } from './mock.js';
 
 const BASE_URL = 'http://localhost:3000';
 const USE_MOCK = true;
@@ -23,9 +23,11 @@ async function request(method, path, body = null) {
     if (body) options.body = JSON.stringify(body);
 
     const response = await fetch(BASE_URL + path, options);
-    const data = await response.json();
+    // 본문이 없는 204 응답은 JSON으로 파싱하지 않는다.
+    // Do not parse 204 responses because they intentionally have no body.
+    const data = response.status === 204 ? null : await response.json();
 
-    if (!response.ok) throw new Error(data.message || 'Request failed');
+    if (!response.ok) throw new Error(data?.message || 'Request failed');
     return data;
 }
 
@@ -47,12 +49,15 @@ export function createSpot({ title, description, latitude, longitude, tags }) {
 
 // Comments
 export function getComments(id) {
-    if (USE_MOCK) return Promise.resolve(MOCK_COMMENTS);
     return request('GET', `/api/spots/${id}/comments`);
 }
 
 export function postComment(id, content) {
     return request('POST', `/api/spots/${id}/comments`, { content });
+}
+
+export function deleteComment(spotId, commentId) {
+    return request('DELETE', `/api/spots/${spotId}/comments/${commentId}`);
 }
 
 // Likes
