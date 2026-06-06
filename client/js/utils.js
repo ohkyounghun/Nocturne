@@ -29,3 +29,35 @@ export function showSuccess(formEl, message) {
 
     successEl.textContent = message;
 }
+
+// Update nav based on login state
+// call this on every page load
+export function updateAuthNav() {
+    const token = localStorage.getItem('token');
+
+    const navLogin = document.getElementById('nav-login');
+    const navRegister = document.getElementById('nav-register');
+    const navBookmarks = document.getElementById('nav-bookmarks');
+    const navLogout = document.getElementById('nav-logout');
+
+    if (token) {
+        // logged in — show bookmarks + logout, hide login + register
+        if (navLogin) navLogin.classList.add('hidden');
+        if (navRegister) navRegister.classList.add('hidden');
+        if (navBookmarks) navBookmarks.classList.remove('hidden');
+        if (navLogout) navLogout.classList.remove('hidden');
+    } else {
+        // logged out — show login + register, hide bookmarks + logout
+        if (navLogin) navLogin.classList.remove('hidden');
+        if (navRegister) navRegister.classList.remove('hidden');
+        if (navBookmarks) navBookmarks.classList.add('hidden');
+        if (navLogout) navLogout.classList.add('hidden');
+    }
+}
+
+// Logout — clear token and redirect to index
+export function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    window.location.href = 'index.html';
+}

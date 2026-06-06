@@ -1,11 +1,15 @@
-import { getSpot, getComments } from './api.js';
+import { getSpot, getComments, likeSpot, unlikeSpot } from './api.js';
+import { updateAuthNav, logout } from './utils.js';
 
 // Get spot ID from URL query string
 // e.g. detail.html?id=1 → spotId = 1
 const params = new URLSearchParams(window.location.search);
 const spotId = params.get('id');
 
-// Render spot info
+// like state
+let isLiked = false;
+let likeCount = 0;
+
 async function renderSpot() {
     const spot = await getSpot(spotId);
 
@@ -14,8 +18,11 @@ async function renderSpot() {
     document.getElementById('spot-description').textContent = spot.description;
     document.getElementById('spot-season').textContent = spot.season_tag;
     document.getElementById('spot-weather').textContent = spot.weather_tag;
-    document.getElementById('spot-likes').textContent = `${spot.like_count} Likes`;
     document.getElementById('spot-comments').textContent = `${spot.comment_count} Comments`;
+
+    // set initial like count
+    likeCount = spot.like_count;
+    updateLikeButton();
 
     // image
     if (spot.image_url) {
@@ -23,7 +30,37 @@ async function renderSpot() {
     }
 }
 
-// Render comments
+function updateLikeButton() {
+    const btn = document.getElementById('btn-like');
+    btn.textContent = isLiked ? `♥ ${likeCount} Liked` : `♡ ${likeCount} Like`;
+    btn.style.borderColor = isLiked ? '#c9a84c' : '';
+    btn.style.color = isLiked ? '#c9a84c' : '';
+}
+
+document.getElementById('btn-like').addEventListener('click', async () => {
+    // check if logged in
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        if (isLiked) {
+            await unlikeSpot(spotId);
+            likeCount--;
+            isLiked = false;
+        } else {
+            await likeSpot(spotId);
+            likeCount++;
+            isLiked = true;
+        }
+        updateLikeButton();
+    } catch (err) {
+        console.error('Like toggle failed:', err.message);
+    }
+});
+
 async function renderComments() {
     const comments = await getComments(spotId);
     const list = document.getElementById('comment-list');
@@ -38,5 +75,8 @@ async function renderComments() {
 }
 
 // Entry point
+updateAuthNav();
+document.getElementById('nav-logout').addEventListener('click', logout);
+
 renderSpot();
 renderComments();
