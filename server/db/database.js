@@ -45,7 +45,7 @@ async function initDb() {
             user_id INTEGER NOT NULL,
             url TEXT NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (spot_id) REFERENCES spots(id),
+            FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
             FOREIGN KEY (user_id) REFERENCES users(id)
         );
 
@@ -55,7 +55,7 @@ async function initDb() {
             user_id INTEGER NOT NULL,
             content TEXT NOT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (spot_id) REFERENCES spots(id),
+            FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
             FOREIGN KEY (user_id) REFERENCES users(id)
         );
 
@@ -63,7 +63,7 @@ async function initDb() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             spot_id INTEGER NOT NULL,
             user_id INTEGER NOT NULL,
-            FOREIGN KEY (spot_id) REFERENCES spots(id),
+            FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
             FOREIGN KEY (user_id) REFERENCES users(id),
             UNIQUE (spot_id, user_id)
         );
@@ -72,7 +72,7 @@ async function initDb() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             spot_id INTEGER NOT NULL,
             user_id INTEGER NOT NULL,
-            FOREIGN KEY (spot_id) REFERENCES spots(id),
+            FOREIGN KEY (spot_id) REFERENCES spots(id) ON DELETE CASCADE,
             FOREIGN KEY (user_id) REFERENCES users(id),
             UNIQUE (spot_id, user_id)
         );

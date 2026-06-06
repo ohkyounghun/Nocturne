@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — Nocturne</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Header / Nav -->
+<header class="header">
+    <div class="header-left">
+        <a href="index.html" class="logo">NOCTURNE</a>
+        <a href="about.html" class="nav-link">About</a>
+        <a href="bookmarks.html" id="nav-bookmarks" class="nav-link hidden">Bookmarks</a>
+    </div>
+    <div class="header-right">
+        <a href="login.html" id="nav-login" class="nav-link">Login</a>
+        <button id="nav-logout" class="hidden">Logout</button>
+    </div>
+</header>
+
+<!-- About -->
+<main class="about-container">
+
+    <!-- Project Introduction -->
+    <section class="about-section">
+        <h1>About Nocturne</h1>
+        <p>Nocturne is a community platform for discovering and sharing the best night view spots in Korea. Beautiful night views are scattered across blogs, Instagram, and word of mouth — Nocturne brings them all to one place.</p>
+        <p>Browse spots on an interactive map, submit your own hidden gems, like and bookmark your favorites, and connect with others who love the city after dark.</p>
+    </section>
+
+    <!-- How to Use -->
+    <section class="about-section">
+        <h2>How to Use</h2>
+        <ol class="about-steps">
+            <li>
+                <span class="step-number">01</span>
+                <div>
+                    <strong>Browse the Map</strong>
+                    <p>Explore Korea's night view spots on the interactive map. Click any pin to see details.</p>
+                </div>
+            </li>
+            <li>
+                <span class="step-number">02</span>
+                <div>
+                    <strong>Create an Account</strong>
+                    <p>Register to unlock full features — submit spots, like, bookmark, and comment.</p>
+                </div>
+            </li>
+            <li>
+                <span class="step-number">03</span>
+                <div>
+                    <strong>Submit a Spot</strong>
+                    <p>Found a hidden gem? Submit it with a location, photo, and description to share with the community.</p>
+                </div>
+            </li>
+            <li>
+                <span class="step-number">04</span>
+                <div>
+                    <strong>Like & Bookmark</strong>
+                    <p>Like spots to signal quality. Bookmark your favorites to save them to your personal collection.</p>
+                </div>
+            </li>
+            <li>
+                <span class="step-number">05</span>
+                <div>
+                    <strong>Leave a Comment</strong>
+                    <p>Share tips, recent conditions, or personal experiences on each spot's detail page.</p>
+                </div>
+            </li>
+        </ol>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <p class="footer-logo">NOCTURNE</p>
+    <p class="footer-tagline">Discover Korea After Dark</p>
+    <p class="footer-team">© 2026 Nocturne · Dohun Kwon · Gunwoo Kim · Kyounghun Oh</p>
+    <p class="footer-contact">Contact: <a href="mailto:nocturne@mail.com">nocturne@mail.com</a></p>
+</footer>
+
+<!-- Scripts -->
+<script type="module">
+    import { updateAuthNav, logout } from './js/utils.js';
+    updateAuthNav();
+    document.getElementById('nav-logout').addEventListener('click', logout);
+</script>
+
+</body>
+</html>

@@ -1,33 +1,44 @@
-import { getSpot, likeSpot, unlikeSpot } from './api.js';
+import { getSpot, likeSpot, unlikeSpot, deleteSpot } from './api.js';
 import { updateAuthNav, logout } from './utils.js';
 import { initCommentThread } from './commentThread.js';
 
-// Get spot ID from URL query string
-// e.g. detail.html?id=1 → spotId = 1
 const params = new URLSearchParams(window.location.search);
 const spotId = params.get('id');
 
-// like state
 let isLiked = false;
 let likeCount = 0;
+
+function getCurrentUserId() {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    try {
+        const encoded = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        const padded = encoded.padEnd(Math.ceil(encoded.length / 4) * 4, '=');
+        return Number(JSON.parse(atob(padded)).sub);
+    } catch {
+        return null;
+    }
+}
 
 async function renderSpot() {
     const spot = await getSpot(spotId);
 
-    // filled by JS — never use innerHTML (XSS prevention)
     document.getElementById('spot-title').textContent = spot.title;
     document.getElementById('spot-description').textContent = spot.description ?? '';
     document.getElementById('spot-season').textContent = spot.season_tag ?? '-';
     document.getElementById('spot-weather').textContent = spot.weather_tag ?? '-';
     document.getElementById('spot-comments').textContent = `${spot.comment_count ?? 0} Comments`;
 
-    // set initial like count
     likeCount = spot.like_count ?? 0;
     updateLikeButton();
 
-    // image
     if (spot.image_url) {
         document.getElementById('spot-image').src = spot.image_url;
+    }
+
+    // show delete button only to the spot owner
+    if (getCurrentUserId() === spot.user_id) {
+        document.getElementById('btn-delete-spot').classList.remove('hidden');
     }
 }
 
@@ -39,12 +50,10 @@ function updateLikeButton() {
 }
 
 document.getElementById('btn-like').addEventListener('click', async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (!localStorage.getItem('token')) {
         window.location.href = 'login.html';
         return;
     }
-
     try {
         if (isLiked) {
             await unlikeSpot(spotId);
@@ -61,7 +70,16 @@ document.getElementById('btn-like').addEventListener('click', async () => {
     }
 });
 
-// Entry point
+document.getElementById('btn-delete-spot').addEventListener('click', async () => {
+    if (!confirm('Delete this spot?')) return;
+    try {
+        await deleteSpot(spotId);
+        window.location.href = 'index.html';
+    } catch (err) {
+        console.error('Delete failed:', err.message);
+    }
+});
+
 updateAuthNav();
 document.getElementById('nav-logout').addEventListener('click', logout);
 renderSpot();

@@ -1,4 +1,6 @@
 const express = require('express');
+const path = require('path');
+const multer = require('multer');
 const router = express.Router();
 const bookmarksController = require('../controllers/bookmarksController');
 const commentsController = require('../controllers/commentsController');
@@ -7,6 +9,22 @@ const spotsController = require('../controllers/spotsController');
 const authenticate = require('../middleware/auth');
 const asyncHandler = require('../utils/asyncHandler');
 const spots = require('../models/spots');
+const photos = require('../models/photos');
+
+const storage = multer.diskStorage({
+    destination: path.join(__dirname, '../uploads'),
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        cb(null, `${Date.now()}-${req.user.sub}${ext}`);
+    }
+});
+const upload = multer({
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        cb(null, file.mimetype.startsWith('image/'));
+    }
+});
 
 /**
  * @swagger
@@ -309,5 +327,18 @@ router.get('/:id', asyncHandler(async (req, res) => {
  *         description: Spot not found
  */
 router.delete('/:id', authenticate, asyncHandler(spotsController.remove));
+
+router.post('/:id/photos', authenticate, upload.single('photo'), asyncHandler(async (req, res) => {
+    const spotId = Number.parseInt(req.params.id, 10);
+    if (Number.isNaN(spotId)) {
+        return res.status(400).json({ code: 'INVALID_SPOT_ID', message: 'Spot id must be a number' });
+    }
+    if (!req.file) {
+        return res.status(400).json({ code: 'NO_FILE', message: 'Image file is required' });
+    }
+    const url = `/uploads/${req.file.filename}`;
+    const photo = await photos.create({ spotId, userId: req.user.sub, url });
+    return res.status(201).json(photo);
+}));
 
 module.exports = router;

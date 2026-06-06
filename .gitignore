@@ -55,6 +55,22 @@ coverage/
 *.db
 
 # =========================
+# Uploads
+# =========================
+server/uploads/*
+!server/uploads/.gitkeep
+!server/uploads/남산타워.png
+!server/uploads/남산공원.png
+!server/uploads/여의도한강공원.png
+!server/uploads/인왕산.png
+!server/uploads/낙산공원.png
+!server/uploads/부산다이아몬드브릿지.png
+!server/uploads/광안대교.png
+!server/uploads/인천송도센트럴파크.png
+!server/uploads/전주한옥마을.png
+!server/uploads/청계천.png
+
+# =========================
 # macOS
 # =========================
 .DS_Store

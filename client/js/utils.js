@@ -38,21 +38,30 @@ export function updateAuthNav() {
     const navLogin = document.getElementById('nav-login');
     const navRegister = document.getElementById('nav-register');
     const navBookmarks = document.getElementById('nav-bookmarks');
+    const navSubmit = document.getElementById('nav-submit');
     const navLogout = document.getElementById('nav-logout');
 
     if (token) {
-        // logged in — show bookmarks + logout, hide login + register
+        // logged in
         if (navLogin) navLogin.classList.add('hidden');
         if (navRegister) navRegister.classList.add('hidden');
         if (navBookmarks) navBookmarks.classList.remove('hidden');
+        if (navSubmit) navSubmit.classList.remove('hidden');
         if (navLogout) navLogout.classList.remove('hidden');
     } else {
-        // logged out — show login + register, hide bookmarks + logout
+        // logged out
         if (navLogin) navLogin.classList.remove('hidden');
-        if (navRegister) navRegister.classList.remove('hidden');
+        if (navRegister) navRegister.classList.add('hidden');
         if (navBookmarks) navBookmarks.classList.add('hidden');
+        if (navSubmit) navSubmit.classList.add('hidden');
         if (navLogout) navLogout.classList.add('hidden');
     }
+
+    // reveal nav after auth state is applied
+    if (navLogin) navLogin.style.visibility = 'visible';
+    if (navRegister) navRegister.style.visibility = 'visible';
+    if (navLogout) navLogout.style.visibility = 'visible';
+    if (navBookmarks) navBookmarks.style.visibility = 'visible';
 }
 
 // Logout — clear token and redirect to index
