@@ -1,5 +1,6 @@
-import { getSpot, getComments, likeSpot, unlikeSpot } from './api.js';
+import { getSpot, likeSpot, unlikeSpot } from './api.js';
 import { updateAuthNav, logout } from './utils.js';
+import { initCommentThread } from './commentThread.js';
 
 // Get spot ID from URL query string
 // e.g. detail.html?id=1 → spotId = 1
@@ -38,7 +39,6 @@ function updateLikeButton() {
 }
 
 document.getElementById('btn-like').addEventListener('click', async () => {
-    // check if logged in
     const token = localStorage.getItem('token');
     if (!token) {
         window.location.href = 'login.html';
@@ -61,22 +61,8 @@ document.getElementById('btn-like').addEventListener('click', async () => {
     }
 });
 
-async function renderComments() {
-    const comments = await getComments(spotId);
-    const list = document.getElementById('comment-list');
-    list.innerHTML = '';
-
-    comments.forEach(comment => {
-        const li = document.createElement('li');
-        li.className = 'comment-item';
-        li.textContent = `${comment.username}: ${comment.content}`;
-        list.appendChild(li);
-    });
-}
-
 // Entry point
 updateAuthNav();
 document.getElementById('nav-logout').addEventListener('click', logout);
-
 renderSpot();
-renderComments();
+initCommentThread();
