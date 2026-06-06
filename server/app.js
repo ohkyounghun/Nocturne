@@ -4,6 +4,7 @@ const path = require('path');
 const { initDb } = require('./db/database');
 const spotsRouter = require('./routes/spots');
 const authRouter = require("./routes/auth");
+const bookmarksRouter = require('./routes/bookmarks');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +17,8 @@ app.use(express.static(path.join(__dirname, '../client')));
 app.use('/api/spots', spotsRouter);
 
 app.use('/api/auth', authRouter);
+
+app.use('/api/users/me/bookmarks', bookmarksRouter);
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {

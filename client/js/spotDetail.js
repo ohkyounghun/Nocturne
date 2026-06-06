@@ -1,4 +1,5 @@
-import { getSpot } from './api.js';
+import { getSpot, likeSpot, unlikeSpot } from './api.js';
+import { updateAuthNav, logout } from './utils.js';
 import { initCommentThread } from './commentThread.js';
 
 // Get spot ID from URL query string
@@ -6,7 +7,10 @@ import { initCommentThread } from './commentThread.js';
 const params = new URLSearchParams(window.location.search);
 const spotId = params.get('id');
 
-// Render spot info
+// like state
+let isLiked = false;
+let likeCount = 0;
+
 async function renderSpot() {
     const spot = await getSpot(spotId);
 
@@ -15,8 +19,11 @@ async function renderSpot() {
     document.getElementById('spot-description').textContent = spot.description;
     document.getElementById('spot-season').textContent = spot.season_tag;
     document.getElementById('spot-weather').textContent = spot.weather_tag;
-    document.getElementById('spot-likes').textContent = `${spot.like_count} Likes`;
     document.getElementById('spot-comments').textContent = `${spot.comment_count} Comments`;
+
+    // set initial like count
+    likeCount = spot.like_count;
+    updateLikeButton();
 
     // image
     if (spot.image_url) {
@@ -24,6 +31,38 @@ async function renderSpot() {
     }
 }
 
+function updateLikeButton() {
+    const btn = document.getElementById('btn-like');
+    btn.textContent = isLiked ? `♥ ${likeCount} Liked` : `♡ ${likeCount} Like`;
+    btn.style.borderColor = isLiked ? '#c9a84c' : '';
+    btn.style.color = isLiked ? '#c9a84c' : '';
+}
+
+document.getElementById('btn-like').addEventListener('click', async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        if (isLiked) {
+            await unlikeSpot(spotId);
+            likeCount--;
+            isLiked = false;
+        } else {
+            await likeSpot(spotId);
+            likeCount++;
+            isLiked = true;
+        }
+        updateLikeButton();
+    } catch (err) {
+        console.error('Like toggle failed:', err.message);
+    }
+});
+
 // Entry point
+updateAuthNav();
+document.getElementById('nav-logout').addEventListener('click', logout);
 renderSpot();
 initCommentThread();

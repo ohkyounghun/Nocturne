@@ -23,7 +23,6 @@ async function request(method, path, body = null) {
     if (body) options.body = JSON.stringify(body);
 
     const response = await fetch(BASE_URL + path, options);
-    // 본문이 없는 204 응답은 JSON으로 파싱하지 않는다.
     // Do not parse 204 responses because they intentionally have no body.
     const data = response.status === 204 ? null : await response.json();
 

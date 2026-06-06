@@ -40,7 +40,6 @@ function renderComments({ spotId, commentList, comments, currentUserId }) {
         const content = document.createElement("p");
         item.className = "comment-item";
 
-        // 사용자 입력은 HTML로 해석하지 않고 텍스트로만 렌더링한다.
         // Render user input only as text, never as HTML.
         author.textContent = comment.username || "Anonymous";
         content.textContent = comment.content || "";
@@ -92,7 +91,6 @@ async function handleCommentSubmit({ spotId, commentList, commentInput }) {
 }
 
 export function initCommentThread() {
-    // 댓글 UI 초기화 진입점이다.
     // Entry point for initializing the comment UI.
     const spotId = getSpotIdFromUrl();
     const commentList = document.getElementById("comment-list");

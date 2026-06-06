@@ -1,4 +1,5 @@
 import { getSpots } from './api.js';
+import { updateAuthNav, logout } from './utils.js';
 
 // Initialize map
 function initMap() {
@@ -44,5 +45,8 @@ async function renderPins(map) {
 }
 
 // Entry point
+updateAuthNav();
+document.getElementById('nav-logout').addEventListener('click', logout);
+
 const map = initMap();
 renderPins(map);
