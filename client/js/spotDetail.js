@@ -2,6 +2,7 @@ import {
     bookmarkSpot,
     deleteSpot,
     getMyBookmarks,
+    getMyLikes,
     getSpot,
     likeSpot,
     unlikeSpot,
@@ -95,12 +96,18 @@ function updateBookmarkButton() {
     btn.style.color = isBookmarked ? '#c9a84c' : '';
 }
 
+async function loadLikeState() {
+    if (!localStorage.getItem('token')) return;
+    const likes = await getMyLikes();
+    isLiked = likes.some((like) => Number(like.spot_id) === Number(spotId));
+    updateLikeButton();
+}
+
 async function loadBookmarkState() {
     if (!localStorage.getItem('token')) {
         updateBookmarkButton();
         return;
     }
-
     const bookmarks = await getMyBookmarks();
     isBookmarked = bookmarks.some(
         (bookmark) => Number(bookmark.spot_id) === Number(spotId)
@@ -162,7 +169,6 @@ document.getElementById('btn-delete-spot').addEventListener('click', async () =>
 updateAuthNav();
 document.getElementById('nav-logout').addEventListener('click', logout);
 renderSpot();
-loadBookmarkState().catch((err) => {
-    console.error('Bookmark state failed:', err.message);
-});
+loadLikeState().catch((err) => console.error('Like state failed:', err.message));
+loadBookmarkState().catch((err) => console.error('Bookmark state failed:', err.message));
 initCommentThread();

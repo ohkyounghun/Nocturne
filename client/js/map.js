@@ -27,21 +27,33 @@ function renderCards(spots) {
     });
 }
 
+let allSpots = [];
+let markers = [];
+
 // Render spot pins on map
-async function renderPins(map) {
-    const spots = await getSpots();
+function renderPins(map, spots) {
+    markers.forEach(m => m.setMap(null));
+    markers = [];
 
     spots.forEach(spot => {
         const position = new kakao.maps.LatLng(spot.latitude, spot.longitude);
         const marker = new kakao.maps.Marker({ map, position });
 
-        // click marker → go to detail page
         kakao.maps.event.addListener(marker, 'click', () => {
             window.location.href = `detail.html?id=${spot.id}`;
         });
+
+        markers.push(marker);
     });
 
     renderCards(spots);
+}
+
+function applyFilter(map, season) {
+    const filtered = season === 'all'
+        ? allSpots
+        : allSpots.filter(s => s.season_tag === season || s.season_tag === 'all');
+    renderPins(map, filtered);
 }
 
 // Entry point
@@ -54,4 +66,16 @@ if (localStorage.getItem('token')) {
 }
 
 const map = initMap();
-renderPins(map);
+
+getSpots().then(spots => {
+    allSpots = spots;
+    renderPins(map, allSpots);
+
+    document.querySelectorAll('.filter-btn[data-season]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn[data-season]').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            applyFilter(map, btn.dataset.season);
+        });
+    });
+});

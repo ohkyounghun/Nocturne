@@ -19,6 +19,14 @@ async function getBySpot(spotId) {
     );
 }
 
+async function getByUser(userId) {
+    const db = getDb();
+    return db.all(
+        `SELECT id, spot_id, user_id FROM likes WHERE user_id = ? ORDER BY id DESC`,
+        [userId]
+    );
+}
+
 async function create({ spotId, userId }) {
     const db = getDb();
     const result = await db.run(
@@ -51,6 +59,7 @@ async function remove({ spotId, userId }) {
 
 module.exports = {
     getBySpot,
+    getByUser,
     create,
     delete: remove
 };
