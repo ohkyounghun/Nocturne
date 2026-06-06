@@ -40,6 +40,11 @@ export function getSpot(id) {
     return request('GET', `/api/spots/${id}`);
 }
 
+// Create a new spot (requires auth — JWT auto-injected by request())
+export function createSpot({ title, description, latitude, longitude, tags }) {
+    return request('POST', '/api/spots', { title, description, latitude, longitude, tags });
+}
+
 // Comments
 export function getComments(id) {
     if (USE_MOCK) return Promise.resolve(MOCK_COMMENTS);
