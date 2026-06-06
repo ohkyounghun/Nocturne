@@ -14,6 +14,9 @@ app.use(express.json());
 // Serve static files from the client folder
 app.use(express.static(path.join(__dirname, '../client')));
 
+// Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 app.use('/api/spots', spotsRouter);
 
 app.use('/api/auth', authRouter);

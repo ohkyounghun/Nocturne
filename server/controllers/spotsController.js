@@ -1,7 +1,7 @@
 const spots = require("../models/spots");
 
 async function create(req, res) {
-    const { title, description, latitude, longitude } = req.body ?? {};
+    const { title, description, latitude, longitude, seasonTag, weatherTag } = req.body ?? {};
 
     if (!title || !description || latitude == null || longitude == null) {
         return res.status(400).json({
@@ -25,7 +25,9 @@ async function create(req, res) {
         title,
         description,
         latitude: lat,
-        longitude: lng
+        longitude: lng,
+        seasonTag: seasonTag ?? null,
+        weatherTag: weatherTag ?? null
     });
 
     return res.status(201).json(spot);
