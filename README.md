@@ -44,6 +44,7 @@ Write endpoints require an `Authorization: Bearer <token>` header.
 | DELETE | `/api/spots/:spotId/comments/:commentId`  | yes  | Delete a comment           |
 | POST   | `/api/spots/:id/likes`                    | yes  | Like a spot                |
 | DELETE | `/api/spots/:id/likes`                    | yes  | Remove a like              |
+| POST   | `/api/spots/:id/photos`                   | yes  | Upload a photo for a spot  |
 | POST   | `/api/spots/:id/bookmarks`                | yes  | Bookmark a spot            |
 | DELETE | `/api/spots/:id/bookmarks`                | yes  | Remove a bookmark          |
 | GET    | `/api/users/me/bookmarks`                 | yes  | List your bookmarks        |
@@ -56,7 +57,7 @@ Interactive API documentation is available at `/api/docs` (Swagger UI) while the
 client/                 Static frontend (HTML/CSS/JS), served by Express
   index.html            Map view
   detail.html           Spot detail
-  submit.html           Spot submission form
+  post-spot.html        Spot submission form
   login.html
   register.html
   bookmarks.html
@@ -109,6 +110,14 @@ npm test
 | Kyung Hun Oh  | Backend — auth, spots API, seed data          |
 | Gun Woo Kim   | Backend — likes/comments/bookmarks, tests, CI |
 | Do Hun Kwon   | Frontend — map, UI, responsive design         |
+
+## Security
+
+**XSS mitigation:**
+- All user-generated content is rendered via `textContent` (never `innerHTML`)
+- HTTP security headers applied via `helmet`
+- JWT stored in `localStorage` — known XSS risk, mitigated by input sanitization at the API boundary
+- Error responses follow a consistent `{ "code": "...", "message": "..." }` format to avoid leaking internals
 
 ## AI Use Disclosure
 
