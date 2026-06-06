@@ -49,6 +49,14 @@ export function deleteSpot(id) {
     return request('DELETE', `/api/spots/${id}`);
 }
 
+export function updateSpot(id, data) {
+    return request('PATCH', `/api/spots/${id}`, data);
+}
+
+export function getMySpots() {
+    return request('GET', '/api/users/me/spots');
+}
+
 export async function uploadPhoto(spotId, formData) {
     const token = localStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/api/spots/${spotId}/photos`, {
