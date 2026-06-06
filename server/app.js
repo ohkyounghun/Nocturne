@@ -10,6 +10,7 @@ const authRouter = require("./routes/auth");
 const bookmarksRouter = require('./routes/bookmarks');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json());
