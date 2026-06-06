@@ -58,6 +58,7 @@ client/                 Static frontend (HTML/CSS/JS), served by Express
   index.html            Map view
   detail.html           Spot detail
   post-spot.html        Spot submission form
+  about.html            About page
   login.html
   register.html
   bookmarks.html
