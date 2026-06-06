@@ -9,7 +9,7 @@ const SPOT_COLS = `
 
 async function findAll() {
     const db = getDb();
-    return db.all(`SELECT ${SPOT_COLS} FROM spots s ORDER BY s.created_at DESC`);
+    return db.all(`SELECT ${SPOT_COLS} FROM spots s ORDER BY s.id DESC LIMIT 10`);
 }
 
 async function findById(id) {
