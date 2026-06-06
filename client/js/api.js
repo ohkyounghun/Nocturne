@@ -1,4 +1,4 @@
-import { MOCK_SPOTS, MOCK_SPOT_DETAIL, MOCK_COMMENTS, MOCK_BOOKMARKS } from './mock.js';
+import { MOCK_SPOTS, MOCK_SPOT_DETAIL, MOCK_BOOKMARKS } from './mock.js';
 
 const BASE_URL = 'http://localhost:3000';
 const USE_MOCK = true;
@@ -49,7 +49,6 @@ export function createSpot({ title, description, latitude, longitude, tags }) {
 
 // Comments
 export function getComments(id) {
-    if (USE_MOCK) return Promise.resolve(MOCK_COMMENTS);
     return request('GET', `/api/spots/${id}/comments`);
 }
 
