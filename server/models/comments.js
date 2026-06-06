@@ -50,14 +50,17 @@ async function create({ spotId, userId, content }) {
     );
 }
 
-async function remove({ commentId, userId }) {
+async function remove({ spotId, commentId, userId }) {
     const db = getDb();
+
+    // 요청한 장소의 댓글이면서 작성자가 본인일 때만 삭제한다.
+    // Delete only when the comment belongs to both the requested spot and user.
     const result = await db.run(
         `
         DELETE FROM comments
-        WHERE id = ? AND user_id = ?
+        WHERE id = ? AND spot_id = ? AND user_id = ?
         `,
-        [commentId, userId]
+        [commentId, spotId, userId]
     );
 
     return result.changes;

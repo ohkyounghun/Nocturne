@@ -44,7 +44,35 @@ async function create(req, res) {
     return res.status(201).json(comment);
 }
 
+async function remove(req, res) {
+    const spotId = Number.parseInt(req.params.spotId, 10);
+    const commentId = Number.parseInt(req.params.commentId, 10);
+
+    if (Number.isNaN(spotId) || Number.isNaN(commentId)) {
+        return res.status(400).json({
+            code: "INVALID_COMMENT_PATH",
+            message: "Spot id and comment id must be numbers"
+        });
+    }
+
+    const deletedCount = await comments.delete({
+        spotId,
+        commentId,
+        userId: req.user.sub
+    });
+
+    if (deletedCount === 0) {
+        return res.status(404).json({
+            code: "COMMENT_NOT_FOUND",
+            message: "Comment not found or not owned by this user"
+        });
+    }
+
+    return res.status(204).send();
+}
+
 module.exports = {
     listBySpot,
-    create
+    create,
+    remove
 };
