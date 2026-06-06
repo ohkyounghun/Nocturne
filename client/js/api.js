@@ -30,10 +30,16 @@ async function request(method, path, body = null) {
     return data;
 }
 
-// Spots
+// Spots — top 10 for card list
 export function getSpots() {
     if (USE_MOCK) return Promise.resolve(MOCK_SPOTS);
     return request('GET', '/api/spots');
+}
+
+// Spots — all spots (no limit) for map pins, includes easter egg spots
+export function getSpotsForMap() {
+    if (USE_MOCK) return Promise.resolve(MOCK_SPOTS);
+    return request('GET', '/api/spots/map');
 }
 
 export function getSpot(id) {

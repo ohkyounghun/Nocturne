@@ -7,6 +7,7 @@ const SPOT_COLS = `
     (SELECT url FROM photos WHERE spot_id = s.id ORDER BY created_at ASC LIMIT 1) AS image_url
 `;
 
+// Returns top 10 spots for the card list
 async function findAll(tag) {
     const db = getDb();
 
@@ -25,6 +26,26 @@ async function findAll(tag) {
     }
 
     return db.all(`SELECT ${SPOT_COLS} FROM spots s ORDER BY s.id DESC LIMIT 10`);
+}
+
+// Returns all spots (no LIMIT) for the map — includes easter egg spots
+async function findAllForMap(tag) {
+    const db = getDb();
+
+    if (tag) {
+        return db.all(
+            `
+            SELECT ${SPOT_COLS}
+            FROM spots s
+            WHERE LOWER(s.season_tag) = LOWER(?)
+               OR LOWER(s.weather_tag) = LOWER(?)
+            ORDER BY s.id DESC
+            `,
+            [tag, tag]
+        );
+    }
+
+    return db.all(`SELECT ${SPOT_COLS} FROM spots s ORDER BY s.id DESC`);
 }
 
 async function findById(id) {
@@ -48,4 +69,4 @@ async function remove(id) {
     return result.changes;
 }
 
-module.exports = { findAll, findById, create, delete: remove };
+module.exports = { findAll, findAllForMap, findById, create, delete: remove };

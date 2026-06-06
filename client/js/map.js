@@ -1,4 +1,4 @@
-import { getSpots } from './api.js';
+import { getSpots, getSpotsForMap } from './api.js';
 import { updateAuthNav, logout } from './utils.js';
 
 // Initialize map
@@ -11,7 +11,7 @@ function initMap() {
     return new kakao.maps.Map(container, options);
 }
 
-// Render spot cards below map
+// Render spot cards below map (top 10 only)
 function renderCards(spots) {
     const list = document.getElementById('spot-list');
     list.innerHTML = '';
@@ -27,10 +27,11 @@ function renderCards(spots) {
     });
 }
 
-let allSpots = [];
+let allSpotsForMap = [];
+let allSpotsForCards = [];
 let markers = [];
 
-// Render spot pins on map
+// Render spot pins on map (all spots including easter eggs)
 function renderPins(map, spots) {
     markers.forEach(m => m.setMap(null));
     markers = [];
@@ -45,15 +46,19 @@ function renderPins(map, spots) {
 
         markers.push(marker);
     });
-
-    renderCards(spots);
 }
 
 function applyFilter(map, season) {
-    const filtered = season === 'all'
-        ? allSpots
-        : allSpots.filter(s => s.season_tag === season || s.season_tag === 'all');
-    renderPins(map, filtered);
+    const filteredMap = season === 'all'
+        ? allSpotsForMap
+        : allSpotsForMap.filter(s => s.season_tag === season || s.season_tag === 'all');
+
+    const filteredCards = season === 'all'
+        ? allSpotsForCards
+        : allSpotsForCards.filter(s => s.season_tag === season || s.season_tag === 'all');
+
+    renderPins(map, filteredMap);
+    renderCards(filteredCards);
 }
 
 // Entry point
@@ -67,9 +72,12 @@ if (localStorage.getItem('token')) {
 
 const map = initMap();
 
-getSpots().then(spots => {
-    allSpots = spots;
-    renderPins(map, allSpots);
+Promise.all([getSpotsForMap(), getSpots()]).then(([mapSpots, cardSpots]) => {
+    allSpotsForMap = mapSpots;
+    allSpotsForCards = cardSpots;
+
+    renderPins(map, allSpotsForMap);
+    renderCards(allSpotsForCards);
 
     document.querySelectorAll('.filter-btn[data-season]').forEach(btn => {
         btn.addEventListener('click', () => {

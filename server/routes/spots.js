@@ -30,7 +30,7 @@ const upload = multer({
  * @swagger
  * /api/spots:
  *   get:
- *     summary: List all spots
+ *     summary: List top 10 spots for the card list
  *     parameters:
  *       - in: query
  *         name: tag
@@ -47,6 +47,30 @@ router.get('/', asyncHandler(async (req, res) => {
         ? req.query.tag.trim()
         : '';
     const rows = await spots.findAll(tag || undefined);
+    return res.json(rows);
+}));
+
+/**
+ * @swagger
+ * /api/spots/map:
+ *   get:
+ *     summary: List all spots for the map (no limit, includes easter egg spots)
+ *     parameters:
+ *       - in: query
+ *         name: tag
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter by season or weather tag
+ *     responses:
+ *       200:
+ *         description: Success
+ */
+router.get('/map', asyncHandler(async (req, res) => {
+    const tag = typeof req.query.tag === 'string'
+        ? req.query.tag.trim()
+        : '';
+    const rows = await spots.findAllForMap(tag || undefined);
     return res.json(rows);
 }));
 
