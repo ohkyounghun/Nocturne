@@ -11,7 +11,7 @@ if (!localStorage.getItem('token')) {
 const list = document.getElementById('my-spot-list');
 const countEl = document.getElementById('spot-count');
 
-const SEASONS = ['all', 'spring', 'summer', 'autumn', 'winter'];
+const SEASONS = ['spring', 'summer', 'autumn', 'winter'];
 const WEATHERS = ['clear', 'cloudy', 'rainy', 'snowy'];
 
 // Escape user-supplied values before inserting into innerHTML (XSS prevention)
@@ -129,7 +129,7 @@ function renderCard(spot) {
         const saveBtn = form.querySelector('.btn-save');
         const title = form.querySelector('input[name="title"]').value.trim();
         const description = form.querySelector('textarea[name="description"]').value.trim();
-        const seasonTag = form.querySelector('.season-opt.active')?.dataset.value || 'all';
+        const seasonTag = form.querySelector('.season-opt.active')?.dataset.value || 'spring';
         const weatherTag = form.querySelector('.weather-opt.active')?.dataset.value || 'clear';
 
         saveBtn.disabled = true;
