@@ -25,11 +25,14 @@ async function register(req, res) {
         // Return created user info — never include password or hash in the response
         return res.status(201).json({ id, email, username });
     } catch (err) {
-        // SQLite UNIQUE constraint fires when email is already registered
+        // SQLite UNIQUE constraint fires when email or username is already registered
         if (err && err.code === "SQLITE_CONSTRAINT") {
+            const message = err.message.includes('users.email')
+                ? 'Email already exists'
+                : 'Username already taken';
             return res.status(409).json({
                 code: "CONFLICT",
-                message: "Email already exists",
+                message,
             });
         }
         // Unexpected errors bubble up to the Express error handler
