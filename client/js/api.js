@@ -1,6 +1,6 @@
 import { MOCK_SPOTS, MOCK_SPOT_DETAIL, MOCK_BOOKMARKS } from './mock.js';
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = '';
 const USE_MOCK = false;
 // USE_MOCK = true  →  mock data (no backend needed)
 // USE_MOCK = false →  real backend (http://localhost:3000)
