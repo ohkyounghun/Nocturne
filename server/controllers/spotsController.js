@@ -21,7 +21,7 @@ async function create(req, res) {
     }
 
     const spot = await spots.create({
-        userId: req.user.id,
+        userId: req.user.sub,
         title,
         description,
         latitude: lat,
@@ -50,7 +50,7 @@ async function remove(req, res) {
         });
     }
 
-    if (spot.user_id !== req.user.id) {
+    if (spot.user_id !== req.user.sub) {
         return res.status(403).json({
             code: "FORBIDDEN",
             message: "You are not the owner of this spot"
