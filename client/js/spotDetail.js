@@ -1,6 +1,28 @@
 import { getSpot, likeSpot, unlikeSpot, deleteSpot } from './api.js';
 import { updateAuthNav, logout } from './utils.js';
 import { initCommentThread } from './commentThread.js';
+import { KAKAO_MAP_KEY } from './config.js';
+
+function loadKakaoSDK() {
+    return new Promise((resolve) => {
+        if (window.kakao?.maps?.services) { resolve(); return; }
+        const script = document.createElement('script');
+        script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services`;
+        script.onload = () => kakao.maps.load(resolve);
+        document.head.appendChild(script);
+    });
+}
+
+async function reverseGeocode(lat, lng) {
+    await loadKakaoSDK();
+    return new Promise((resolve) => {
+        const geocoder = new kakao.maps.services.Geocoder();
+        geocoder.coord2Address(lng, lat, (result, status) => {
+            if (status !== kakao.maps.services.Status.OK) { resolve(''); return; }
+            resolve(result[0].road_address?.address_name || result[0].address?.address_name || '');
+        });
+    });
+}
 
 const params = new URLSearchParams(window.location.search);
 const spotId = params.get('id');
@@ -35,6 +57,10 @@ async function renderSpot() {
     if (spot.image_url) {
         document.getElementById('spot-image').src = spot.image_url;
     }
+
+    reverseGeocode(spot.latitude, spot.longitude).then((address) => {
+        if (address) document.getElementById('spot-address').textContent = '📍 ' + address;
+    });
 
     // show delete button only to the spot owner
     if (getCurrentUserId() === spot.user_id) {

@@ -312,6 +312,12 @@ a:hover {
     margin-bottom: 12px;
 }
 
+.spot-address {
+    font-size: 0.85rem;
+    color: #8a99b3;
+    margin-bottom: 12px;
+}
+
 .spot-tags {
     display: flex;
     gap: 8px;
