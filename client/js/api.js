@@ -49,13 +49,16 @@ export function deleteSpot(id) {
     return request('DELETE', `/api/spots/${id}`);
 }
 
-export function uploadPhoto(spotId, formData) {
+export async function uploadPhoto(spotId, formData) {
     const token = localStorage.getItem('token');
-    return fetch(`${BASE_URL}/api/spots/${spotId}/photos`, {
+    const response = await fetch(`${BASE_URL}/api/spots/${spotId}/photos`, {
         method: 'POST',
         headers: token ? { 'Authorization': `Bearer ${token}` } : {},
         body: formData
-    }).then(res => res.json());
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data?.message || 'Photo upload failed');
+    return data;
 }
 
 // Comments
@@ -78,6 +81,10 @@ export function likeSpot(id) {
 
 export function unlikeSpot(id) {
     return request('DELETE', `/api/spots/${id}/likes`);
+}
+
+export function getMyLikes() {
+    return request('GET', '/api/users/me/likes');
 }
 
 // Bookmarks
