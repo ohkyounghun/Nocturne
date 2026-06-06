@@ -3,8 +3,8 @@ const express = require('express');
 const path = require('path');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 const spotsRouter = require('./routes/spots');
 const authRouter = require("./routes/auth");
 const usersRouter = require('./routes/users');
@@ -20,20 +20,9 @@ app.use(express.static(path.join(__dirname, '../client')));
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Swagger
-const swaggerSpec = swaggerJsdoc({
-    definition: {
-        openapi: '3.0.0',
-        info: { title: 'Nocturne API', version: '1.0.0' },
-        components: {
-            securitySchemes: {
-                bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }
-            }
-        }
-    },
-    apis: ['./server/routes/*.js']
-});
+// Swagger UI (interactive docs) + raw OpenAPI spec endpoint
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/api/openapi.json', (req, res) => res.json(swaggerSpec));
 
 // Throttle auth endpoints to slow down brute-force / credential-stuffing attacks
 const authLimiter = rateLimit({

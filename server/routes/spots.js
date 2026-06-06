@@ -360,6 +360,37 @@ router.get('/:id', asyncHandler(async (req, res) => {
  */
 router.delete('/:id', authenticate, asyncHandler(spotsController.remove));
 
+/**
+ * @swagger
+ * /api/spots/{id}:
+ *   patch:
+ *     summary: Edit a spot (owner only)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [title]
+ *             properties:
+ *               title: { type: string }
+ *               description: { type: string }
+ *               seasonTag: { type: string }
+ *               weatherTag: { type: string }
+ *     responses:
+ *       200: { description: Updated }
+ *       400: { description: Validation error }
+ *       401: { description: Unauthorized }
+ *       403: { description: Forbidden — not the owner }
+ *       404: { description: Spot not found }
+ */
 router.patch('/:id', authenticate, asyncHandler(async (req, res) => {
     const id = Number.parseInt(req.params.id, 10);
     if (Number.isNaN(id)) {
@@ -380,6 +411,33 @@ router.patch('/:id', authenticate, asyncHandler(async (req, res) => {
     return res.json(updated);
 }));
 
+/**
+ * @swagger
+ * /api/spots/{id}/photos:
+ *   post:
+ *     summary: Upload a photo for a spot (owner only)
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               photo: { type: string, format: binary }
+ *     responses:
+ *       201: { description: Photo uploaded }
+ *       400: { description: Invalid spot id or no file }
+ *       401: { description: Unauthorized }
+ *       403: { description: Forbidden — not the owner }
+ *       404: { description: Spot not found }
+ */
 router.post('/:id/photos', authenticate, upload.single('photo'), asyncHandler(async (req, res) => {
     const spotId = Number.parseInt(req.params.id, 10);
     if (Number.isNaN(spotId)) {
