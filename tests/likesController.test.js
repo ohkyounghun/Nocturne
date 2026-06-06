@@ -44,7 +44,10 @@ describe("likesController", () => {
             user: { sub: 7 }
         };
         const res = createResponse();
-        likes.create.mockRejectedValue({ code: "SQLITE_CONSTRAINT" });
+        likes.create.mockRejectedValue({
+            code: "SQLITE_CONSTRAINT",
+            message: "UNIQUE constraint failed: likes.spot_id, likes.user_id"
+        });
 
         await likesController.create(req, res);
 
@@ -53,6 +56,22 @@ describe("likesController", () => {
             code: "ALREADY_LIKED",
             message: "You already liked this spot"
         });
+    });
+
+    test("rethrows database errors unrelated to duplicate likes", async () => {
+        const req = {
+            params: { id: "999" },
+            user: { sub: 7 }
+        };
+        const res = createResponse();
+        const databaseError = {
+            code: "SQLITE_CONSTRAINT",
+            message: "FOREIGN KEY constraint failed"
+        };
+        likes.create.mockRejectedValue(databaseError);
+
+        await expect(likesController.create(req, res)).rejects.toBe(databaseError);
+        expect(res.status).not.toHaveBeenCalledWith(409);
     });
 
     test("removes the authenticated user's like", async () => {

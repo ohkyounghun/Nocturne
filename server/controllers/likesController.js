@@ -1,5 +1,10 @@
 const likes = require("../models/likes");
 
+function isDuplicateLikeError(error) {
+    return error?.code === "SQLITE_CONSTRAINT"
+        && error.message?.includes("UNIQUE constraint failed: likes.spot_id, likes.user_id");
+}
+
 function parseSpotId(req, res) {
     const spotId = Number.parseInt(req.params.id, 10);
 
@@ -31,7 +36,7 @@ async function create(req, res) {
     } catch (error) {
         // DB 고유 제약조건을 API의 명확한 중복 응답으로 변환한다.
         // Convert the DB unique constraint into an explicit duplicate response.
-        if (error?.code === "SQLITE_CONSTRAINT") {
+        if (isDuplicateLikeError(error)) {
             return res.status(409).json({
                 code: "ALREADY_LIKED",
                 message: "You already liked this spot"
