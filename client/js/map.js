@@ -1,4 +1,4 @@
-import { getSpots } from './api.js';
+import { getAllSpots } from './api.js';
 import { updateAuthNav, logout } from './utils.js';
 
 // Initialize map
@@ -45,8 +45,6 @@ function renderPins(map, spots) {
 
         markers.push(marker);
     });
-
-    renderCards(spots);
 }
 
 function applyFilter(map, season) {
@@ -54,6 +52,7 @@ function applyFilter(map, season) {
         ? allSpots
         : allSpots.filter(s => s.season_tag === season || s.season_tag === 'all');
     renderPins(map, filtered);
+    renderCards(filtered.slice(0, 10));
 }
 
 // Entry point
@@ -67,9 +66,10 @@ if (localStorage.getItem('token')) {
 
 const map = initMap();
 
-getSpots().then(spots => {
+getAllSpots().then(spots => {
     allSpots = spots;
     renderPins(map, allSpots);
+    renderCards(allSpots.slice(0, 10));
 
     document.querySelectorAll('.filter-btn[data-season]').forEach(btn => {
         btn.addEventListener('click', () => {

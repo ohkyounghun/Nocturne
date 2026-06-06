@@ -38,6 +38,13 @@ const upload = multer({
  *         schema:
  *           type: string
  *         description: Filter by season or weather tag
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [all]
+ *         description: Use `all` to return every spot for map markers
  *     responses:
  *       200:
  *         description: Success
@@ -46,7 +53,8 @@ router.get('/', asyncHandler(async (req, res) => {
     const tag = typeof req.query.tag === 'string'
         ? req.query.tag.trim()
         : '';
-    const rows = await spots.findAll(tag || undefined);
+    const includeAll = req.query.limit === 'all';
+    const rows = await spots.findAll(tag || undefined, includeAll);
     return res.json(rows);
 }));
 

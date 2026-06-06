@@ -36,6 +36,11 @@ export function getSpots() {
     return request('GET', '/api/spots');
 }
 
+export function getAllSpots() {
+    if (USE_MOCK) return Promise.resolve(MOCK_SPOTS);
+    return request('GET', '/api/spots?limit=all');
+}
+
 export function getSpot(id) {
     if (USE_MOCK) return Promise.resolve(MOCK_SPOT_DETAIL);
     return request('GET', `/api/spots/${id}`);
