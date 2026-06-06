@@ -4,10 +4,13 @@
   "description": "> Discover Seoul after dark",
   "main": "index.js",
   "scripts": {
-    "start": "node server/index.js",
-    "dev": "nodemon server/index.js",
+    "start": "node server/app.js",
+    "dev": "nodemon server/app.js",
     "test": "jest",
     "seed": "node server/db/seed.js"
+  },
+  "engines": {
+    "node": "20.x"
   },
   "repository": {
     "type": "git",
