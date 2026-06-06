@@ -35,7 +35,8 @@ Write endpoints require an `Authorization: Bearer <token>` header.
 |--------|-------------------------------------------|------|----------------------------|
 | POST   | `/api/auth/register`                      | —    | Create an account          |
 | POST   | `/api/auth/login`                         | —    | Log in, returns a JWT      |
-| GET    | `/api/spots`                              | —    | List spots                 |
+| GET    | `/api/spots`                              | —    | List top 10 spots (`?tag=`, `?limit=all`) |
+| GET    | `/api/spots/map`                          | —    | All spots for map markers  |
 | GET    | `/api/spots/:id`                          | —    | Get a single spot          |
 | POST   | `/api/spots`                              | yes  | Create a spot              |
 | PATCH  | `/api/spots/:id`                          | yes  | Edit a spot (owner only)   |
@@ -136,10 +137,18 @@ GitHub Actions runs the same `npm test` command for every pull request targeting
 
 ## Security
 
-**XSS mitigation:**
-- All user-generated content is rendered via `textContent` (never `innerHTML`)
+**Authentication & passwords**
+- Passwords hashed with `bcrypt` (cost factor 12); plaintext is never stored or logged
+- JWT Bearer tokens verified server-side on every protected route; the middleware also confirms the token's user still exists (stale-session guard returns `SESSION_EXPIRED`)
+- Login returns the same `401` for unknown email and wrong password to prevent account enumeration
+
+**Access control (broken-access-control mitigation)**
+- Owner-only checks on spot edit/delete and photo upload (`spot.user_id === req.user.sub`) — blocks IDOR
+- `express-rate-limit` on `/api/auth` (20 requests / 15 min per IP) to slow brute-force and credential stuffing
+
+**XSS & headers**
+- All user-generated content is rendered via `textContent`; values inserted into markup are HTML-escaped (never raw `innerHTML`)
 - HTTP security headers applied via `helmet`
-- JWT stored in `localStorage` — known XSS risk, mitigated by input sanitization at the API boundary
 - Error responses follow a consistent `{ "code": "...", "message": "..." }` format to avoid leaking internals
 
 ## AI Use Disclosure
