@@ -41,9 +41,21 @@ export function getSpot(id) {
     return request('GET', `/api/spots/${id}`);
 }
 
-// Create a new spot (requires auth — JWT auto-injected by request())
-export function createSpot({ title, description, latitude, longitude, tags }) {
-    return request('POST', '/api/spots', { title, description, latitude, longitude, tags });
+export function createSpot({ title, description, latitude, longitude, seasonTag, weatherTag }) {
+    return request('POST', '/api/spots', { title, description, latitude, longitude, seasonTag, weatherTag });
+}
+
+export function deleteSpot(id) {
+    return request('DELETE', `/api/spots/${id}`);
+}
+
+export function uploadPhoto(spotId, formData) {
+    const token = localStorage.getItem('token');
+    return fetch(`${BASE_URL}/api/spots/${spotId}/photos`, {
+        method: 'POST',
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+        body: formData
+    }).then(res => res.json());
 }
 
 // Comments

@@ -55,6 +55,12 @@ coverage/
 *.db
 
 # =========================
+# Uploads
+# =========================
+server/uploads/*
+!server/uploads/.gitkeep
+
+# =========================
 # macOS
 # =========================
 .DS_Store

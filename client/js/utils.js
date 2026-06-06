@@ -38,6 +38,7 @@ export function updateAuthNav() {
     const navLogin = document.getElementById('nav-login');
     const navRegister = document.getElementById('nav-register');
     const navBookmarks = document.getElementById('nav-bookmarks');
+    const navSubmit = document.getElementById('nav-submit');
     const navLogout = document.getElementById('nav-logout');
 
     if (token) {
@@ -45,12 +46,14 @@ export function updateAuthNav() {
         if (navLogin) navLogin.classList.add('hidden');
         if (navRegister) navRegister.classList.add('hidden');
         if (navBookmarks) navBookmarks.classList.remove('hidden');
+        if (navSubmit) navSubmit.classList.remove('hidden');
         if (navLogout) navLogout.classList.remove('hidden');
     } else {
         // logged out
         if (navLogin) navLogin.classList.remove('hidden');
         if (navRegister) navRegister.classList.add('hidden');
         if (navBookmarks) navBookmarks.classList.add('hidden');
+        if (navSubmit) navSubmit.classList.add('hidden');
         if (navLogout) navLogout.classList.add('hidden');
     }
 }

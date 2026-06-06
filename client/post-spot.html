@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Spot — Nocturne</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="header">
+    <a href="index.html" class="logo">NOCTURNE</a>
+    <nav class="nav">
+        <a href="login.html" id="nav-login">Login</a>
+        <a href="register.html" id="nav-register">Register</a>
+        <a href="bookmarks.html" id="nav-bookmarks" class="hidden">Bookmarks</a>
+        <a href="post-spot.html" id="nav-submit" class="hidden">Post Spot</a>
+        <button id="nav-logout" class="hidden">Logout</button>
+    </nav>
+</header>
+
+<main class="post-spot-container">
+    <h1>Post a Spot</h1>
+
+    <form id="post-form">
+
+        <!-- Title -->
+        <div class="form-field">
+            <label for="title">Title</label>
+            <input type="text" id="title" placeholder="Spot name" required>
+        </div>
+
+        <!-- Description -->
+        <div class="form-field">
+            <label for="description">Description</label>
+            <textarea id="description" rows="3" placeholder="What makes this spot special at night?" required></textarea>
+        </div>
+
+        <!-- Season tag -->
+        <div class="form-field">
+            <label>Season</label>
+            <div class="tag-group" id="season-group">
+                <button type="button" class="tag-btn active" data-value="all">All</button>
+                <button type="button" class="tag-btn" data-value="spring">Spring</button>
+                <button type="button" class="tag-btn" data-value="summer">Summer</button>
+                <button type="button" class="tag-btn" data-value="autumn">Autumn</button>
+                <button type="button" class="tag-btn" data-value="winter">Winter</button>
+            </div>
+        </div>
+
+        <!-- Weather tag -->
+        <div class="form-field">
+            <label>Weather</label>
+            <div class="tag-group" id="weather-group">
+                <button type="button" class="tag-btn active" data-value="clear">Clear</button>
+                <button type="button" class="tag-btn" data-value="cloudy">Cloudy</button>
+                <button type="button" class="tag-btn" data-value="rainy">Rainy</button>
+                <button type="button" class="tag-btn" data-value="snowy">Snowy</button>
+            </div>
+        </div>
+
+        <!-- Location — map click -->
+        <div class="form-field">
+            <div class="location-label-row">
+                <label>Location <span class="field-hint">Click on the map to pin the spot</span></label>
+                <button type="button" id="btn-my-location">Use My Location</button>
+            </div>
+            <div id="pick-map"></div>
+            <p id="location-display" class="location-display">No location selected</p>
+        </div>
+
+        <!-- Photo upload -->
+        <div class="form-field">
+            <label for="photo">Photo <span class="field-hint">Optional · max 5 MB</span></label>
+            <label class="file-label" for="photo">
+                <span id="file-name">Choose image…</span>
+                <input type="file" id="photo" accept="image/*">
+            </label>
+            <img id="photo-preview" class="photo-preview hidden" alt="preview">
+        </div>
+
+        <button type="submit" id="btn-submit">Post Spot</button>
+
+    </form>
+
+    <p class="back-link"><a href="index.html">← Back to map</a></p>
+</main>
+
+<script type="module">
+    import { KAKAO_MAP_KEY } from './js/config.js';
+    const script = document.createElement('script');
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false`;
+    script.onload = () => {
+        kakao.maps.load(() => {
+            import('./js/postSpot.js');
+        });
+    };
+    document.head.appendChild(script);
+</script>
+
+</body>
+</html>
