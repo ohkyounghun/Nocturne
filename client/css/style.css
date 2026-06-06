@@ -333,6 +333,18 @@ a:hover {
     margin-bottom: 12px;
 }
 
+.spot-location {
+    width: 100%;
+    margin: 20px 0;
+}
+
+#spot-map {
+    width: 100%;
+    height: 320px;
+    border: 1px solid #2c3442;
+    border-radius: 6px;
+}
+
 .spot-tags {
     display: flex;
     gap: 8px;
@@ -731,6 +743,149 @@ a:hover {
     gap: 16px;
     list-style: none;
 }
+
+/* ------------------------------------------------------------
+   My Spots page
+   ------------------------------------------------------------ */
+#spot-count {
+    margin-bottom: 20px;
+}
+
+.my-spot-card {
+    background: #0f1528;
+    border: 1px solid #1e2540;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    list-style: none;
+    padding: 12px;
+}
+
+.my-spot-view {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.my-spot-img-wrap {
+    flex-shrink: 0;
+}
+
+.my-spot-img-wrap .spot-card-img {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    margin: 0;
+}
+
+.my-spot-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.my-spot-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #e8e0d0;
+    display: block;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.my-spot-title:hover {
+    color: #c9a84c;
+}
+
+.my-spot-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.my-spot-counts {
+    font-size: 0.8rem;
+    color: #666680;
+}
+
+.tag {
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: #1a2035;
+    color: #8890aa;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.my-spot-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.btn-edit,
+.btn-delete,
+.btn-save,
+.btn-cancel {
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid;
+}
+
+.btn-edit {
+    background: transparent;
+    border-color: #c9a84c;
+    color: #c9a84c;
+}
+
+.btn-edit:hover { background: #c9a84c22; }
+
+.btn-delete {
+    background: transparent;
+    border-color: #ff6b6b44;
+    color: #ff6b6b;
+}
+
+.btn-delete:hover { background: #ff6b6b22; }
+
+.my-spot-edit {
+    padding: 12px 0 0 0;
+    border-top: 1px solid #1e2540;
+    margin-top: 12px;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.btn-save {
+    background: #c9a84c;
+    border-color: #c9a84c;
+    color: #0a0e1a;
+    font-weight: 600;
+}
+
+.btn-save:hover:not(:disabled) { background: #e0c060; }
+.btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-cancel {
+    background: transparent;
+    border-color: #444;
+    color: #aaa;
+}
+
+.btn-cancel:hover { background: #1a2035; }
 
 /* ------------------------------------------------------------
    Responsive — mobile (min-width: 480px)

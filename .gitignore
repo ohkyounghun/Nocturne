@@ -58,6 +58,9 @@ coverage/
 # =========================
 server/uploads/*
 !server/uploads/.gitkeep
+!server/uploads/daegu-gangjeong-weir.jpg
+!server/uploads/ulsan-hwasan-park.png
+!server/uploads/gangneung-anbandegi.jpeg
 !server/uploads/남산타워.png
 !server/uploads/남산공원.png
 !server/uploads/여의도한강공원.png

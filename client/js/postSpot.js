@@ -86,7 +86,7 @@ form.addEventListener('submit', async (e) => {
 
     const title = document.getElementById('title').value.trim();
     const description = document.getElementById('description').value.trim();
-    const seasonTag = document.querySelector('#season-group .tag-btn.active')?.dataset.value || 'all';
+    const seasonTag = document.querySelector('#season-group .tag-btn.active')?.dataset.value || 'spring';
     const weatherTag = document.querySelector('#weather-group .tag-btn.active')?.dataset.value || 'clear';
 
     const btn = document.getElementById('btn-submit');

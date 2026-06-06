@@ -10,6 +10,11 @@ async function findByUsername(username) {
     return db.get('SELECT * FROM users WHERE username = ?', [username]);
 }
 
+async function findById(id) {
+    const db = getDb();
+    return db.get('SELECT * FROM users WHERE id = ?', [id]);
+}
+
 async function create({ email, password_hash, username }) {
     const db = getDb();
     const result = await db.run(
@@ -19,4 +24,4 @@ async function create({ email, password_hash, username }) {
     return result.lastID;
 }
 
-module.exports = { findByEmail, findByUsername, create };
+module.exports = { findByEmail, findByUsername, findById, create };

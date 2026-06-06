@@ -1,4 +1,4 @@
-import { getSpots, getSpotsForMap } from './api.js';
+import { getAllSpots } from './api.js';
 import { updateAuthNav, logout } from './utils.js';
 
 // Initialize map
@@ -11,7 +11,7 @@ function initMap() {
     return new kakao.maps.Map(container, options);
 }
 
-// Render spot cards below map (top 10 only)
+// Render spot cards below map
 function renderCards(spots) {
     const list = document.getElementById('spot-list');
     list.innerHTML = '';
@@ -27,11 +27,10 @@ function renderCards(spots) {
     });
 }
 
-let allSpotsForMap = [];
-let allSpotsForCards = [];
+let allSpots = [];
 let markers = [];
 
-// Render spot pins on map (all spots including easter eggs)
+// Render spot pins on map
 function renderPins(map, spots) {
     markers.forEach(m => m.setMap(null));
     markers = [];
@@ -49,16 +48,11 @@ function renderPins(map, spots) {
 }
 
 function applyFilter(map, season) {
-    const filteredMap = season === 'all'
-        ? allSpotsForMap
-        : allSpotsForMap.filter(s => s.season_tag === season || s.season_tag === 'all');
-
-    const filteredCards = season === 'all'
-        ? allSpotsForCards
-        : allSpotsForCards.filter(s => s.season_tag === season || s.season_tag === 'all');
-
-    renderPins(map, filteredMap);
-    renderCards(filteredCards);
+    const filtered = season === 'all'
+        ? allSpots
+        : allSpots.filter(s => s.season_tag === season || s.season_tag === 'all');
+    renderPins(map, filtered);
+    renderCards(filtered.slice(0, 10));
 }
 
 // Entry point
@@ -72,12 +66,10 @@ if (localStorage.getItem('token')) {
 
 const map = initMap();
 
-Promise.all([getSpotsForMap(), getSpots()]).then(([mapSpots, cardSpots]) => {
-    allSpotsForMap = mapSpots;
-    allSpotsForCards = cardSpots;
-
-    renderPins(map, allSpotsForMap);
-    renderCards(allSpotsForCards);
+getAllSpots().then(spots => {
+    allSpots = spots;
+    renderPins(map, allSpots);
+    renderCards(allSpots.slice(0, 10));
 
     document.querySelectorAll('.filter-btn[data-season]').forEach(btn => {
         btn.addEventListener('click', () => {

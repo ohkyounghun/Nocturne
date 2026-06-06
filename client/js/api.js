@@ -26,20 +26,26 @@ async function request(method, path, body = null) {
     // Do not parse 204 responses because they intentionally have no body.
     const data = response.status === 204 ? null : await response.json();
 
+    // DB 초기화 등으로 세션 사용자가 사라졌다면 오래된 토큰을 제거한다.
+    // Clear stale credentials when the server no longer recognizes the session user.
+    if (response.status === 401 && localStorage.getItem('token')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+    }
+
     if (!response.ok) throw new Error(data?.message || 'Request failed');
     return data;
 }
 
-// Spots — top 10 for card list
+// Spots
 export function getSpots() {
     if (USE_MOCK) return Promise.resolve(MOCK_SPOTS);
     return request('GET', '/api/spots');
 }
 
-// Spots — all spots (no limit) for map pins, includes easter egg spots
-export function getSpotsForMap() {
+export function getAllSpots() {
     if (USE_MOCK) return Promise.resolve(MOCK_SPOTS);
-    return request('GET', '/api/spots/map');
+    return request('GET', '/api/spots?limit=all');
 }
 
 export function getSpot(id) {
@@ -53,6 +59,14 @@ export function createSpot({ title, description, latitude, longitude, seasonTag,
 
 export function deleteSpot(id) {
     return request('DELETE', `/api/spots/${id}`);
+}
+
+export function updateSpot(id, data) {
+    return request('PATCH', `/api/spots/${id}`, data);
+}
+
+export function getMySpots() {
+    return request('GET', '/api/users/me/spots');
 }
 
 export async function uploadPhoto(spotId, formData) {

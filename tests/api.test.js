@@ -10,7 +10,7 @@ const testDbFile = path.join(os.tmpdir(), `nocturne-api-${process.pid}.db`);
 process.env.DB_FILE = testDbFile;
 
 const app = require("../server/app");
-const { closeDb, initDb } = require("../server/db/database");
+const { closeDb, getDb, initDb } = require("../server/db/database");
 
 const TEST_EMAIL = "api-test@nocturne.local";
 const TEST_PASSWORD = "test-password-123";
@@ -85,11 +85,67 @@ describe("API integration", () => {
         expect(response.body).toEqual({ code: "UNAUTHORIZED" });
     });
 
+    test("POST /api/spots returns 401 when the token user no longer exists", async () => {
+        const staleToken = jwt.sign(
+            { sub: 999999 },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
+        const response = await request(app)
+            .post("/api/spots")
+            .set("Authorization", `Bearer ${staleToken}`)
+            .send({
+                title: "Stale session spot",
+                description: "This request must not reach the insert",
+                latitude: 37.5,
+                longitude: 127.0
+            });
+
+        expect(response.status).toBe(401);
+        expect(response.body).toEqual({
+            code: "SESSION_EXPIRED",
+            message: "Your session is no longer valid. Please log in again."
+        });
+    });
+
     test("GET /api/spots returns 200 with an array", async () => {
         const response = await request(app).get("/api/spots");
 
         expect(response.status).toBe(200);
         expect(Array.isArray(response.body)).toBe(true);
+    });
+
+    test("GET /api/spots limits cards while limit=all returns every map spot", async () => {
+        const db = getDb();
+        const user = await db.get(
+            "SELECT id FROM users WHERE email = ?",
+            [TEST_EMAIL]
+        );
+
+        for (let index = 1; index <= 11; index += 1) {
+            await db.run(
+                `
+                INSERT INTO spots (
+                    user_id,
+                    title,
+                    description,
+                    latitude,
+                    longitude
+                )
+                VALUES (?, ?, ?, ?, ?)
+                `,
+                [user.id, `Map Spot ${index}`, "Map marker fixture", 37.5, 127.0]
+            );
+        }
+
+        const cardResponse = await request(app).get("/api/spots");
+        const mapResponse = await request(app).get("/api/spots?limit=all");
+
+        expect(cardResponse.status).toBe(200);
+        expect(cardResponse.body).toHaveLength(10);
+        expect(mapResponse.status).toBe(200);
+        expect(mapResponse.body).toHaveLength(12);
     });
 
     test("POST /api/spots/:id/likes returns 409 for a duplicate like", async () => {

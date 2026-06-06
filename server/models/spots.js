@@ -7,9 +7,9 @@ const SPOT_COLS = `
     (SELECT url FROM photos WHERE spot_id = s.id ORDER BY created_at ASC LIMIT 1) AS image_url
 `;
 
-// Returns top 10 spots for the card list
-async function findAll(tag) {
+async function findAll(tag, includeAll = false) {
     const db = getDb();
+    const limitClause = includeAll ? "" : "LIMIT 10";
 
     if (tag) {
         return db.all(
@@ -19,33 +19,15 @@ async function findAll(tag) {
             WHERE LOWER(s.season_tag) = LOWER(?)
                OR LOWER(s.weather_tag) = LOWER(?)
             ORDER BY s.id DESC
-            LIMIT 10
+            ${limitClause}
             `,
             [tag, tag]
         );
     }
 
-    return db.all(`SELECT ${SPOT_COLS} FROM spots s ORDER BY s.id DESC LIMIT 10`);
-}
-
-// Returns all spots (no LIMIT) for the map — includes easter egg spots
-async function findAllForMap(tag) {
-    const db = getDb();
-
-    if (tag) {
-        return db.all(
-            `
-            SELECT ${SPOT_COLS}
-            FROM spots s
-            WHERE LOWER(s.season_tag) = LOWER(?)
-               OR LOWER(s.weather_tag) = LOWER(?)
-            ORDER BY s.id DESC
-            `,
-            [tag, tag]
-        );
-    }
-
-    return db.all(`SELECT ${SPOT_COLS} FROM spots s ORDER BY s.id DESC`);
+    return db.all(
+        `SELECT ${SPOT_COLS} FROM spots s ORDER BY s.id DESC ${limitClause}`
+    );
 }
 
 async function findById(id) {
@@ -63,10 +45,24 @@ async function create({ userId, title, description, latitude, longitude, seasonT
     return findById(result.lastID);
 }
 
+async function findByUser(userId) {
+    const db = getDb();
+    return db.all(`SELECT ${SPOT_COLS} FROM spots s WHERE s.user_id = ? ORDER BY s.id DESC`, [userId]);
+}
+
+async function update(id, { title, description, seasonTag, weatherTag }) {
+    const db = getDb();
+    await db.run(
+        `UPDATE spots SET title = ?, description = ?, season_tag = ?, weather_tag = ? WHERE id = ?`,
+        [title, description ?? null, seasonTag ?? null, weatherTag ?? null, id]
+    );
+    return findById(id);
+}
+
 async function remove(id) {
     const db = getDb();
     const result = await db.run(`DELETE FROM spots WHERE id = ?`, [id]);
     return result.changes;
 }
 
-module.exports = { findAll, findAllForMap, findById, create, delete: remove };
+module.exports = { findAll, findById, findByUser, create, update, delete: remove };

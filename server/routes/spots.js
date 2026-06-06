@@ -38,6 +38,13 @@ const upload = multer({
  *         schema:
  *           type: string
  *         description: Filter by season or weather tag
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: string
+ *           enum: [all]
+ *         description: Use `all` to return every spot for map markers
  *     responses:
  *       200:
  *         description: Success
@@ -46,7 +53,8 @@ router.get('/', asyncHandler(async (req, res) => {
     const tag = typeof req.query.tag === 'string'
         ? req.query.tag.trim()
         : '';
-    const rows = await spots.findAll(tag || undefined);
+    const includeAll = req.query.limit === 'all';
+    const rows = await spots.findAll(tag || undefined, includeAll);
     return res.json(rows);
 }));
 
@@ -352,10 +360,37 @@ router.get('/:id', asyncHandler(async (req, res) => {
  */
 router.delete('/:id', authenticate, asyncHandler(spotsController.remove));
 
+router.patch('/:id', authenticate, asyncHandler(async (req, res) => {
+    const id = Number.parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+        return res.status(400).json({ code: 'INVALID_SPOT_ID', message: 'Spot id must be a number' });
+    }
+    const spot = await spots.findById(id);
+    if (!spot) {
+        return res.status(404).json({ code: 'NOT_FOUND', message: 'Spot not found' });
+    }
+    if (spot.user_id !== req.user.sub) {
+        return res.status(403).json({ code: 'FORBIDDEN', message: 'Not the owner' });
+    }
+    const { title, description, seasonTag, weatherTag } = req.body;
+    if (!title || !title.trim()) {
+        return res.status(400).json({ code: 'MISSING_TITLE', message: 'Title is required' });
+    }
+    const updated = await spots.update(id, { title: title.trim(), description, seasonTag, weatherTag });
+    return res.json(updated);
+}));
+
 router.post('/:id/photos', authenticate, upload.single('photo'), asyncHandler(async (req, res) => {
     const spotId = Number.parseInt(req.params.id, 10);
     if (Number.isNaN(spotId)) {
         return res.status(400).json({ code: 'INVALID_SPOT_ID', message: 'Spot id must be a number' });
+    }
+    const spot = await spots.findById(spotId);
+    if (!spot) {
+        return res.status(404).json({ code: 'NOT_FOUND', message: 'Spot not found' });
+    }
+    if (spot.user_id !== req.user.sub) {
+        return res.status(403).json({ code: 'FORBIDDEN', message: 'Not the owner' });
     }
     if (!req.file) {
         return res.status(400).json({ code: 'NO_FILE', message: 'Image file is required' });
