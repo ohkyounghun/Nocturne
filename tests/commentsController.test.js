@@ -6,6 +6,7 @@ jest.mock("../server/models/comments", () => ({
 
 const comments = require("../server/models/comments");
 const commentsController = require("../server/controllers/commentsController");
+const authenticate = require("../server/middleware/auth");
 
 function createResponse() {
     return {
@@ -63,5 +64,21 @@ describe("commentsController", () => {
         });
         expect(res.status).toHaveBeenCalledWith(204);
         expect(res.send).toHaveBeenCalled();
+    });
+
+    test("rejects a comment deletion request without authentication", () => {
+        const req = {
+            headers: {},
+            params: { spotId: "3", commentId: "12" }
+        };
+        const res = createResponse();
+        const next = jest.fn();
+
+        authenticate(req, res, next);
+
+        expect(res.status).toHaveBeenCalledWith(401);
+        expect(res.json).toHaveBeenCalledWith({ code: "UNAUTHORIZED" });
+        expect(next).not.toHaveBeenCalled();
+        expect(comments.delete).not.toHaveBeenCalled();
     });
 });
