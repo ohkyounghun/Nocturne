@@ -42,10 +42,24 @@ async function create({ userId, title, description, latitude, longitude, seasonT
     return findById(result.lastID);
 }
 
+async function findByUser(userId) {
+    const db = getDb();
+    return db.all(`SELECT ${SPOT_COLS} FROM spots s WHERE s.user_id = ? ORDER BY s.id DESC`, [userId]);
+}
+
+async function update(id, { title, description, seasonTag, weatherTag }) {
+    const db = getDb();
+    await db.run(
+        `UPDATE spots SET title = ?, description = ?, season_tag = ?, weather_tag = ? WHERE id = ?`,
+        [title, description ?? null, seasonTag ?? null, weatherTag ?? null, id]
+    );
+    return findById(id);
+}
+
 async function remove(id) {
     const db = getDb();
     const result = await db.run(`DELETE FROM spots WHERE id = ?`, [id]);
     return result.changes;
 }
 
-module.exports = { findAll, findById, create, delete: remove };
+module.exports = { findAll, findById, findByUser, create, update, delete: remove };
