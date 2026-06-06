@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const commentsController = require('../controllers/commentsController');
+const likesController = require('../controllers/likesController');
 const spotsController = require('../controllers/spotsController');
 const authenticate = require('../middleware/auth');
 const asyncHandler = require('../utils/asyncHandler');
@@ -75,6 +76,9 @@ router.post('/', authenticate, asyncHandler(spotsController.create));
  *         description: Invalid spot id
  */
 router.get('/:id/comments', asyncHandler(commentsController.listBySpot));
+
+router.post('/:id/likes', authenticate, asyncHandler(likesController.create));
+router.delete('/:id/likes', authenticate, asyncHandler(likesController.remove));
 
 /**
  * @swagger
