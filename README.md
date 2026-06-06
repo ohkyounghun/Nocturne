@@ -5,6 +5,8 @@
 
 A community platform for discovering and sharing night view spots in Seoul. Browse spots on an interactive map, submit your own, and save the ones you like.
 
+**Live demo:** https://nocturne-htdu.onrender.com &nbsp;·&nbsp; **API docs:** https://nocturne-htdu.onrender.com/api/docs
+
 ## Features
 
 - Interactive Kakao Maps view of night spots across Seoul
@@ -53,7 +55,12 @@ Write endpoints require an `Authorization: Bearer <token>` header.
 | GET    | `/api/users/me/likes`                     | yes  | List spots you liked       |
 | GET    | `/api/users/me/bookmarks`                 | yes  | List your bookmarks        |
 
-Interactive API documentation is available at `/api/docs` (Swagger UI) while the server is running.
+The OpenAPI 3.0 specification lives at [`openapi.json`](openapi.json) in the repository (regenerate with `npm run openapi`). The running app also serves it at:
+
+- `/api/docs` — Swagger UI (interactive)
+- `/api/openapi.json` — raw OpenAPI JSON
+
+Live: https://nocturne-htdu.onrender.com/api/docs
 
 ## Project Structure
 
