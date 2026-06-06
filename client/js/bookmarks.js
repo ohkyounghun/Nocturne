@@ -26,7 +26,19 @@ async function renderBookmarks() {
     bookmarks.forEach(bookmark => {
         const li = document.createElement('li');
         li.className = 'spot-card';
-        li.textContent = bookmark.title;
+
+        if (bookmark.image_url) {
+            const img = document.createElement('img');
+            img.src = bookmark.image_url;
+            img.alt = bookmark.title;
+            img.className = 'spot-card-img';
+            li.appendChild(img);
+        }
+
+        const title = document.createElement('span');
+        title.textContent = bookmark.title;
+        li.appendChild(title);
+
         li.addEventListener('click', () => {
             window.location.href = `detail.html?id=${bookmark.spot_id}`;
         });

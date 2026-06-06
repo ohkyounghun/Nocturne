@@ -11,7 +11,8 @@ async function getByUser(userId) {
             bookmarks.user_id,
             spots.title,
             spots.latitude,
-            spots.longitude
+            spots.longitude,
+            (SELECT url FROM photos WHERE spot_id = spots.id ORDER BY created_at ASC LIMIT 1) AS image_url
         FROM bookmarks
         JOIN spots ON bookmarks.spot_id = spots.id
         WHERE bookmarks.user_id = ?

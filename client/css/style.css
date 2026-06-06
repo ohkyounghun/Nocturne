@@ -214,6 +214,15 @@ a:hover {
     color: #c9a84c;
 }
 
+.spot-card-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+    margin: -20px -20px 12px -20px;
+    width: calc(100% + 40px);
+}
+
 /* ------------------------------------------------------------
    Auth (Login / Register)
    ------------------------------------------------------------ */
