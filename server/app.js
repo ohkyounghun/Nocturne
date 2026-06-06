@@ -1,6 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const helmet = require('helmet');
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const { initDb } = require('./db/database');
 const spotsRouter = require('./routes/spots');
 const authRouter = require("./routes/auth");
@@ -9,6 +12,7 @@ const bookmarksRouter = require('./routes/bookmarks');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json());
 
 // Serve static files from the client folder
@@ -17,10 +21,23 @@ app.use(express.static(path.join(__dirname, '../client')));
 // Serve uploaded images
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Swagger
+const swaggerSpec = swaggerJsdoc({
+    definition: {
+        openapi: '3.0.0',
+        info: { title: 'Nocturne API', version: '1.0.0' },
+        components: {
+            securitySchemes: {
+                bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }
+            }
+        }
+    },
+    apis: ['./server/routes/*.js']
+});
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use('/api/spots', spotsRouter);
-
 app.use('/api/auth', authRouter);
-
 app.use('/api/users/me/bookmarks', bookmarksRouter);
 
 // eslint-disable-next-line no-unused-vars
