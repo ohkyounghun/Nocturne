@@ -42,7 +42,6 @@ router.get('/', authenticate, asyncHandler(bookmarksController.getMyBookmarks));
  *       409:
  *         description: Spot already bookmarked by this user
  */
-router.post('/:id', authenticate, asyncHandler(bookmarksController.create));
 
 /**
  * @swagger
@@ -67,6 +66,4 @@ router.post('/:id', authenticate, asyncHandler(bookmarksController.create));
  *       404:
  *         description: Bookmark not found
  */
-router.delete('/:id', authenticate, asyncHandler(bookmarksController.remove));
-
 module.exports = router;

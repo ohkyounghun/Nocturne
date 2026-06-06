@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bookmarksController = require('../controllers/bookmarksController');
 const commentsController = require('../controllers/commentsController');
 const likesController = require('../controllers/likesController');
 const spotsController = require('../controllers/spotsController');
@@ -194,6 +195,8 @@ router.post('/:id/likes', authenticate, asyncHandler(likesController.create));
  *         description: Like not found
  */
 router.delete('/:id/likes', authenticate, asyncHandler(likesController.remove));
+router.post('/:id/bookmarks', authenticate, asyncHandler(bookmarksController.create));
+router.delete('/:id/bookmarks', authenticate, asyncHandler(bookmarksController.remove));
 
 /**
  * @swagger
