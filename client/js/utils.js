@@ -56,6 +56,12 @@ export function updateAuthNav() {
         if (navSubmit) navSubmit.classList.add('hidden');
         if (navLogout) navLogout.classList.add('hidden');
     }
+
+    // reveal nav after auth state is applied
+    if (navLogin) navLogin.style.visibility = 'visible';
+    if (navRegister) navRegister.style.visibility = 'visible';
+    if (navLogout) navLogout.style.visibility = 'visible';
+    if (navBookmarks) navBookmarks.style.visibility = 'visible';
 }
 
 // Logout — clear token and redirect to index
