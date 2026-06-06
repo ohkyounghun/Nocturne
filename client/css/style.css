@@ -46,6 +46,28 @@ a:hover {
     border-bottom: 1px solid #c9a84c;
 }
 
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-link {
+    color: #b0a898;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.nav-link:hover {
+    color: #c9a84c;
+}
+
 .logo {
     font-size: 1.1rem;
     font-weight: 600;
@@ -723,4 +745,118 @@ a:hover {
     #map {
         height: 70vh;
     }
+}
+
+/* ------------------------------------------------------------
+   About
+   ------------------------------------------------------------ */
+.about-container {
+    max-width: 720px;
+    margin: 60px auto;
+    padding: 0 24px;
+}
+
+.about-section {
+    margin-bottom: 48px;
+}
+
+.about-section h1 {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #c9a84c;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.about-section h2 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #c9a84c;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+}
+
+.about-section p {
+    font-size: 0.95rem;
+    color: #b0a898;
+    line-height: 1.8;
+    margin-bottom: 12px;
+}
+
+.about-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.about-steps li {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.step-number {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #c9a84c;
+    min-width: 32px;
+}
+
+.about-steps strong {
+    display: block;
+    font-size: 0.95rem;
+    color: #e8e0d0;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
+.about-steps p {
+    font-size: 0.85rem;
+    color: #666680;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------ */
+.footer {
+    margin-top: 40px;
+    padding: 40px 24px;
+    background-color: #070a14;
+    border-top: 1px solid #c9a84c;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.footer-logo {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 6px;
+    color: #c9a84c;
+}
+
+.footer-tagline {
+    font-size: 0.85rem;
+    color: #b0a898;
+    letter-spacing: 1px;
+}
+
+.footer-team {
+    font-size: 0.75rem;
+    color: #666680;
+    margin-top: 8px;
+}
+
+.footer-contact {
+    font-size: 0.75rem;
+    color: #666680;
+}
+
+.footer-contact a {
+    color: #c9a84c;
 }

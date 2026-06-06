@@ -42,16 +42,16 @@ export function updateAuthNav() {
     const navLogout = document.getElementById('nav-logout');
 
     if (token) {
-        // logged in — show bookmarks + submit + logout, hide login + register
+        // logged in
         if (navLogin) navLogin.classList.add('hidden');
         if (navRegister) navRegister.classList.add('hidden');
         if (navBookmarks) navBookmarks.classList.remove('hidden');
         if (navSubmit) navSubmit.classList.remove('hidden');
         if (navLogout) navLogout.classList.remove('hidden');
     } else {
-        // logged out — show login + register, hide bookmarks + submit + logout
+        // logged out
         if (navLogin) navLogin.classList.remove('hidden');
-        if (navRegister) navRegister.classList.remove('hidden');
+        if (navRegister) navRegister.classList.add('hidden');
         if (navBookmarks) navBookmarks.classList.add('hidden');
         if (navSubmit) navSubmit.classList.add('hidden');
         if (navLogout) navLogout.classList.add('hidden');
