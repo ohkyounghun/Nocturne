@@ -7,8 +7,23 @@ const SPOT_COLS = `
     (SELECT url FROM photos WHERE spot_id = s.id ORDER BY created_at ASC LIMIT 1) AS image_url
 `;
 
-async function findAll() {
+async function findAll(tag) {
     const db = getDb();
+
+    if (tag) {
+        return db.all(
+            `
+            SELECT ${SPOT_COLS}
+            FROM spots s
+            WHERE LOWER(s.season_tag) = LOWER(?)
+               OR LOWER(s.weather_tag) = LOWER(?)
+            ORDER BY s.id DESC
+            LIMIT 10
+            `,
+            [tag, tag]
+        );
+    }
+
     return db.all(`SELECT ${SPOT_COLS} FROM spots s ORDER BY s.id DESC LIMIT 10`);
 }
 

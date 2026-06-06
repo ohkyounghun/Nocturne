@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const multer = require('multer');
 const router = express.Router();
+const bookmarksController = require('../controllers/bookmarksController');
 const commentsController = require('../controllers/commentsController');
 const likesController = require('../controllers/likesController');
 const spotsController = require('../controllers/spotsController');
@@ -30,12 +31,22 @@ const upload = multer({
  * /api/spots:
  *   get:
  *     summary: List all spots
+ *     parameters:
+ *       - in: query
+ *         name: tag
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter by season or weather tag
  *     responses:
  *       200:
  *         description: Success
  */
 router.get('/', asyncHandler(async (req, res) => {
-    const rows = await spots.findAll();
+    const tag = typeof req.query.tag === 'string'
+        ? req.query.tag.trim()
+        : '';
+    const rows = await spots.findAll(tag || undefined);
     return res.json(rows);
 }));
 
@@ -212,6 +223,56 @@ router.post('/:id/likes', authenticate, asyncHandler(likesController.create));
  *         description: Like not found
  */
 router.delete('/:id/likes', authenticate, asyncHandler(likesController.remove));
+
+/**
+ * @swagger
+ * /api/spots/{id}/bookmarks:
+ *   post:
+ *     summary: Bookmark a spot
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       201:
+ *         description: Bookmark created
+ *       400:
+ *         description: Invalid spot id
+ *       401:
+ *         description: Unauthorized
+ *       409:
+ *         description: Spot already bookmarked by this user
+ */
+router.post('/:id/bookmarks', authenticate, asyncHandler(bookmarksController.create));
+
+/**
+ * @swagger
+ * /api/spots/{id}/bookmarks:
+ *   delete:
+ *     summary: Remove a bookmark from a spot
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Bookmark removed
+ *       400:
+ *         description: Invalid spot id
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Bookmark not found
+ */
+router.delete('/:id/bookmarks', authenticate, asyncHandler(bookmarksController.remove));
 
 /**
  * @swagger
