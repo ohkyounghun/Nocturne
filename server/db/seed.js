@@ -4,6 +4,14 @@ async function seed() {
     const db = await initDb();
 
     await db.exec(`
+        DELETE FROM comments  WHERE spot_id IN (SELECT id FROM spots WHERE user_id = 1);
+        DELETE FROM likes     WHERE spot_id IN (SELECT id FROM spots WHERE user_id = 1);
+        DELETE FROM bookmarks WHERE spot_id IN (SELECT id FROM spots WHERE user_id = 1);
+        DELETE FROM photos    WHERE spot_id IN (SELECT id FROM spots WHERE user_id = 1);
+        DELETE FROM spots WHERE user_id = 1;
+    `);
+
+    await db.exec(`
         INSERT OR IGNORE INTO users (email, password_hash, username)
         VALUES ('seed@nocturne.com', 'seed_hash', 'nocturne_admin');
     `);
