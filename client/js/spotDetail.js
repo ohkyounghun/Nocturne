@@ -13,11 +13,12 @@ import { initCommentThread } from './commentThread.js';
 import { KAKAO_MAP_KEY } from './config.js';
 
 function loadKakaoSDK() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         if (window.kakao?.maps?.services) { resolve(); return; }
         const script = document.createElement('script');
         script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KAKAO_MAP_KEY}&autoload=false&libraries=services`;
         script.onload = () => kakao.maps.load(resolve);
+        script.onerror = () => reject(new Error('Kakao Maps SDK failed to load'));
         document.head.appendChild(script);
     });
 }
@@ -31,6 +32,39 @@ async function reverseGeocode(lat, lng) {
             resolve(result[0].road_address?.address_name || result[0].address?.address_name || '');
         });
     });
+}
+
+async function renderLocation(lat, lng) {
+    const latitude = Number(lat);
+    const longitude = Number(lng);
+    const addressElement = document.getElementById('spot-address');
+
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+        addressElement.textContent = 'Location unavailable';
+        return;
+    }
+
+    // 주소 API가 실패해도 저장된 좌표는 항상 사용자에게 보여준다.
+    // Always show stored coordinates even if reverse geocoding fails.
+    addressElement.textContent = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+
+    try {
+        await loadKakaoSDK();
+
+        const position = new kakao.maps.LatLng(latitude, longitude);
+        const map = new kakao.maps.Map(
+            document.getElementById('spot-map'),
+            { center: position, level: 4 }
+        );
+        new kakao.maps.Marker({ map, position });
+
+        const address = await reverseGeocode(latitude, longitude);
+        if (address) {
+            addressElement.textContent = address;
+        }
+    } catch (error) {
+        console.error('Location rendering failed:', error.message);
+    }
 }
 
 const params = new URLSearchParams(window.location.search);
@@ -72,9 +106,7 @@ async function renderSpot() {
         document.getElementById('spot-image').src = spot.image_url;
     }
 
-    reverseGeocode(spot.latitude, spot.longitude).then((address) => {
-        if (address) document.getElementById('spot-address').textContent = '📍 ' + address;
-    });
+    await renderLocation(spot.latitude, spot.longitude);
 
     // show delete button only to the spot owner
     if (getCurrentUserId() === spot.user_id) {
