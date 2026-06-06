@@ -48,5 +48,10 @@ async function renderPins(map) {
 updateAuthNav();
 document.getElementById('nav-logout').addEventListener('click', logout);
 
+// Show "Post Spot" button in filter bar only when logged in
+if (localStorage.getItem('token')) {
+    document.getElementById('btn-post-spot')?.classList.remove('hidden');
+}
+
 const map = initMap();
 renderPins(map);
