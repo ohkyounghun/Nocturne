@@ -13,11 +13,10 @@
     <div class="header-left">
         <a href="index.html" class="logo">NOCTURNE</a>
         <a href="about.html" class="nav-link">About</a>
+        <a href="bookmarks.html" id="nav-bookmarks" class="nav-link hidden">Bookmarks</a>
     </div>
     <div class="header-right">
-        <a href="bookmarks.html" id="nav-bookmarks" class="nav-link hidden">🔖 Bookmarks</a>
         <a href="login.html" id="nav-login" class="nav-link">Login</a>
-        <a href="register.html" id="nav-register" class="nav-link hidden">Register</a>
         <button id="nav-logout" class="hidden">Logout</button>
     </div>
 </header>
@@ -79,13 +78,17 @@
 <!-- Footer -->
 <footer class="footer">
     <p class="footer-logo">NOCTURNE</p>
-    <p class="footer-tagline">Discover Seoul After Dark</p>
+    <p class="footer-tagline">Discover Korea After Dark</p>
     <p class="footer-team">© 2026 Nocturne · Dohun Kwon · Gunwoo Kim · Kyounghun Oh</p>
     <p class="footer-contact">Contact: <a href="mailto:nocturne@mail.com">nocturne@mail.com</a></p>
 </footer>
 
 <!-- Scripts -->
-<script type="module" src="js/auth.js"></script>
+<script type="module">
+    import { updateAuthNav, logout } from './js/utils.js';
+    updateAuthNav();
+    document.getElementById('nav-logout').addEventListener('click', logout);
+</script>
 
 </body>
 </html>
