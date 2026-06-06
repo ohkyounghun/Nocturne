@@ -100,9 +100,25 @@ KAKAO_API_KEY=your_kakao_api_key
 
 ### Tests
 
+Install the dependencies before running the test suite:
+
 ```bash
+npm install
 npm test
 ```
+
+To run the suites serially while investigating database or open-handle issues:
+
+```bash
+npm test -- --runInBand
+```
+
+The test suite covers controller behavior and Supertest API flows, including
+login, unauthenticated comment requests, spot listing, and duplicate
+like/bookmark conflicts. The current suite contains 4 suites and 15 tests.
+
+GitHub Actions runs the same `npm test` command for every pull request targeting
+`main` and every push to `main` using Node.js 20.
 
 ## Contributors
 
