@@ -76,6 +76,12 @@ router.post('/', authenticate, asyncHandler(spotsController.create));
  *         description: Invalid spot id
  */
 router.get('/:id/comments', asyncHandler(commentsController.listBySpot));
+router.post('/:id/comments', authenticate, asyncHandler(commentsController.create));
+router.delete(
+    '/:spotId/comments/:commentId',
+    authenticate,
+    asyncHandler(commentsController.remove)
+);
 
 /**
  * @swagger
