@@ -1,4 +1,12 @@
-import { getSpot, likeSpot, unlikeSpot, deleteSpot } from './api.js';
+import {
+    bookmarkSpot,
+    deleteSpot,
+    getMyBookmarks,
+    getSpot,
+    likeSpot,
+    unlikeSpot,
+    unbookmarkSpot
+} from './api.js';
 import { updateAuthNav, logout } from './utils.js';
 import { initCommentThread } from './commentThread.js';
 import { KAKAO_MAP_KEY } from './config.js';
@@ -29,6 +37,7 @@ const spotId = params.get('id');
 
 let isLiked = false;
 let likeCount = 0;
+let isBookmarked = false;
 
 function getCurrentUserId() {
     const token = localStorage.getItem('token');
@@ -75,6 +84,26 @@ function updateLikeButton() {
     btn.style.color = isLiked ? '#c9a84c' : '';
 }
 
+function updateBookmarkButton() {
+    const btn = document.getElementById('btn-bookmark');
+    btn.textContent = isBookmarked ? 'Bookmarked' : 'Bookmark';
+    btn.style.borderColor = isBookmarked ? '#c9a84c' : '';
+    btn.style.color = isBookmarked ? '#c9a84c' : '';
+}
+
+async function loadBookmarkState() {
+    if (!localStorage.getItem('token')) {
+        updateBookmarkButton();
+        return;
+    }
+
+    const bookmarks = await getMyBookmarks();
+    isBookmarked = bookmarks.some(
+        (bookmark) => Number(bookmark.spot_id) === Number(spotId)
+    );
+    updateBookmarkButton();
+}
+
 document.getElementById('btn-like').addEventListener('click', async () => {
     if (!localStorage.getItem('token')) {
         window.location.href = 'login.html';
@@ -96,6 +125,26 @@ document.getElementById('btn-like').addEventListener('click', async () => {
     }
 });
 
+document.getElementById('btn-bookmark').addEventListener('click', async () => {
+    if (!localStorage.getItem('token')) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    try {
+        if (isBookmarked) {
+            await unbookmarkSpot(spotId);
+            isBookmarked = false;
+        } else {
+            await bookmarkSpot(spotId);
+            isBookmarked = true;
+        }
+        updateBookmarkButton();
+    } catch (err) {
+        console.error('Bookmark toggle failed:', err.message);
+    }
+});
+
 document.getElementById('btn-delete-spot').addEventListener('click', async () => {
     if (!confirm('Delete this spot?')) return;
     try {
@@ -109,4 +158,7 @@ document.getElementById('btn-delete-spot').addEventListener('click', async () =>
 updateAuthNav();
 document.getElementById('nav-logout').addEventListener('click', logout);
 renderSpot();
+loadBookmarkState().catch((err) => {
+    console.error('Bookmark state failed:', err.message);
+});
 initCommentThread();
