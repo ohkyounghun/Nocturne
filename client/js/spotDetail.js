@@ -16,13 +16,13 @@ async function renderSpot() {
 
     // filled by JS — never use innerHTML (XSS prevention)
     document.getElementById('spot-title').textContent = spot.title;
-    document.getElementById('spot-description').textContent = spot.description;
-    document.getElementById('spot-season').textContent = spot.season_tag;
-    document.getElementById('spot-weather').textContent = spot.weather_tag;
-    document.getElementById('spot-comments').textContent = `${spot.comment_count} Comments`;
+    document.getElementById('spot-description').textContent = spot.description ?? '';
+    document.getElementById('spot-season').textContent = spot.season_tag ?? '-';
+    document.getElementById('spot-weather').textContent = spot.weather_tag ?? '-';
+    document.getElementById('spot-comments').textContent = `${spot.comment_count ?? 0} Comments`;
 
     // set initial like count
-    likeCount = spot.like_count;
+    likeCount = spot.like_count ?? 0;
     updateLikeButton();
 
     // image

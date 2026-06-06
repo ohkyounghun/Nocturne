@@ -32,6 +32,8 @@ async function initDb() {
             description TEXT,
             latitude REAL NOT NULL,
             longitude REAL NOT NULL,
+            season_tag TEXT,
+            weather_tag TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id),
             UNIQUE (user_id, title)
