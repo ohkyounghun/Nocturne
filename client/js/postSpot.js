@@ -2,7 +2,7 @@ import { createSpot, uploadPhoto } from './api.js';
 import { showError } from './utils.js';
 
 if (!localStorage.getItem('token')) {
-    window.location.href = 'login.html';
+    window.location.replace = 'login.html';
 }
 
 const form = document.getElementById('post-form');
