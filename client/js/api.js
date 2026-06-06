@@ -41,9 +41,12 @@ export function getSpot(id) {
     return request('GET', `/api/spots/${id}`);
 }
 
-// Create a new spot (requires auth — JWT auto-injected by request())
 export function createSpot({ title, description, latitude, longitude, tags }) {
     return request('POST', '/api/spots', { title, description, latitude, longitude, tags });
+}
+
+export function deleteSpot(id) {
+    return request('DELETE', `/api/spots/${id}`);
 }
 
 // Comments
