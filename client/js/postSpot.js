@@ -9,8 +9,10 @@ const form = document.getElementById('post-form');
 const locationDisplay = document.getElementById('location-display');
 const btnMyLocation = document.getElementById('btn-my-location');
 const photoInput = document.getElementById('photo');
-const photoPreview = document.getElementById('photo-preview');
-const fileNameEl = document.getElementById('file-name');
+const photoPreviewGrid = document.getElementById('photo-preview-grid');
+const photoCount = document.getElementById('photo-count');
+
+let selectedFiles = [];
 
 let selectedLat = null;
 let selectedLng = null;
@@ -66,22 +68,53 @@ function setupTagGroup(groupId) {
 setupTagGroup('season-group');
 setupTagGroup('weather-group');
 
+function updatePhotoCount() {
+    photoCount.textContent = selectedFiles.length > 0 ? `${selectedFiles.length} photo(s) selected` : '';
+}
+
+function addPreviewItem(file) {
+    const wrap = document.createElement('div');
+    wrap.className = 'photo-preview-item';
+
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    img.alt = file.name;
+
+    const remove = document.createElement('button');
+    remove.type = 'button';
+    remove.className = 'photo-preview-remove';
+    remove.textContent = '×';
+    remove.addEventListener('click', () => {
+        selectedFiles = selectedFiles.filter(f => f !== file);
+        wrap.remove();
+        updatePhotoCount();
+    });
+
+    wrap.appendChild(img);
+    wrap.appendChild(remove);
+    photoPreviewGrid.appendChild(wrap);
+}
+
 // ── Photo preview ─────────────────────────────────────────────
 photoInput.addEventListener('change', () => {
-    const file = photoInput.files[0];
-    if (!file) return;
+    const newFiles = Array.from(photoInput.files);
+    photoInput.value = '';
 
-    if (file.size > 5 * 1024 * 1024) {
-        showError(form, 'Photo must be under 5 MB. Please choose a smaller file.');
-        photoInput.value = '';
-        photoPreview.classList.add('hidden');
-        fileNameEl.textContent = 'Choose image…';
+    const oversized = newFiles.filter(f => f.size > 5 * 1024 * 1024);
+    if (oversized.length) {
+        showError(form, `${oversized.map(f => f.name).join(', ')}: each photo must be under 5 MB.`);
+        return;
+    }
+    if (selectedFiles.length + newFiles.length > 10) {
+        showError(form, `Maximum 10 photos. You have ${selectedFiles.length} selected.`);
         return;
     }
 
-    fileNameEl.textContent = file.name;
-    photoPreview.src = URL.createObjectURL(file);
-    photoPreview.classList.remove('hidden');
+    newFiles.forEach(file => {
+        selectedFiles.push(file);
+        addPreviewItem(file);
+    });
+    updatePhotoCount();
 });
 
 // ── Form submit ───────────────────────────────────────────────
@@ -116,8 +149,7 @@ form.addEventListener('submit', async (e) => {
             weatherTag,
         });
 
-        const file = photoInput.files[0];
-        if (file) {
+        for (const file of selectedFiles) {
             const fd = new FormData();
             fd.append('photo', file);
             await uploadPhoto(spot.id, fd);
