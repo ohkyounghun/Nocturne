@@ -69,6 +69,10 @@ export function getMySpots() {
     return request('GET', '/api/users/me/spots');
 }
 
+export function getSpotPhotos(spotId) {
+    return request('GET', `/api/spots/${spotId}/photos`);
+}
+
 export async function uploadPhoto(spotId, formData) {
     const token = localStorage.getItem('token');
     const response = await fetch(`${BASE_URL}/api/spots/${spotId}/photos`, {

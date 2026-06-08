@@ -4,9 +4,11 @@ import {
     getMyBookmarks,
     getMyLikes,
     getSpot,
+    getSpotPhotos,
     likeSpot,
     unlikeSpot,
-    unbookmarkSpot
+    unbookmarkSpot,
+    uploadPhoto
 } from './api.js';
 import { updateAuthNav, logout } from './utils.js';
 import { initCommentThread } from './commentThread.js';
@@ -90,29 +92,82 @@ function getCurrentUserId() {
     }
 }
 
+let photoUrls = [];
+
+function renderGallery(photos) {
+    const mainImg = document.getElementById('gallery-main-img');
+    const thumbsEl = document.getElementById('gallery-thumbs');
+    thumbsEl.innerHTML = '';
+
+    photoUrls = photos.map(p => p.url);
+
+    if (photoUrls.length === 0) {
+        mainImg.src = '';
+        mainImg.alt = 'No photo yet';
+        return;
+    }
+
+    mainImg.src = photoUrls[0];
+
+    photoUrls.forEach((url, i) => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.className = 'gallery-thumb' + (i === 0 ? ' active' : '');
+        img.addEventListener('click', () => {
+            mainImg.src = url;
+            thumbsEl.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+            img.classList.add('active');
+        });
+        thumbsEl.appendChild(img);
+    });
+}
+
 async function renderSpot() {
-    const spot = await getSpot(spotId);
+    const [spot, photos] = await Promise.all([
+        getSpot(spotId),
+        getSpotPhotos(spotId)
+    ]);
 
     document.getElementById('spot-title').textContent = spot.title;
     document.getElementById('spot-description').textContent = spot.description ?? '';
     document.getElementById('spot-season').textContent = spot.season_tag ?? '-';
     document.getElementById('spot-weather').textContent = spot.weather_tag ?? '-';
-    document.getElementById('spot-comments').textContent = `${spot.comment_count ?? 0} Comments`;
 
     likeCount = spot.like_count ?? 0;
     updateLikeButton();
 
-    if (spot.image_url) {
-        document.getElementById('spot-image').src = spot.image_url;
-    }
+    renderGallery(photos);
 
     await renderLocation(spot.latitude, spot.longitude);
 
-    // show delete button only to the spot owner
     if (getCurrentUserId() === spot.user_id) {
         document.getElementById('btn-delete-spot').classList.remove('hidden');
+        document.getElementById('gallery-upload-wrap').classList.remove('hidden');
     }
 }
+
+document.getElementById('gallery-file-input').addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+
+    const btn = document.querySelector('.gallery-upload-btn');
+    btn.textContent = 'Uploading...';
+
+    try {
+        for (const file of files) {
+            const fd = new FormData();
+            fd.append('photo', file);
+            await uploadPhoto(spotId, fd);
+        }
+        const photos = await getSpotPhotos(spotId);
+        renderGallery(photos);
+    } catch (err) {
+        console.error('Upload failed:', err.message);
+    } finally {
+        btn.textContent = '+ Add Photo';
+        e.target.value = '';
+    }
+});
 
 function updateLikeButton() {
     const btn = document.getElementById('btn-like');

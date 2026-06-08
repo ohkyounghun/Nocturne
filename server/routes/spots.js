@@ -11,10 +11,17 @@ const asyncHandler = require('../utils/asyncHandler');
 const spots = require('../models/spots');
 const photos = require('../models/photos');
 
+const ALLOWED_MIME_EXT = {
+    'image/jpeg': '.jpg',
+    'image/png':  '.png',
+    'image/webp': '.webp',
+    'image/gif':  '.gif',
+};
+
 const storage = multer.diskStorage({
     destination: path.join(__dirname, '../uploads'),
     filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname);
+        const ext = ALLOWED_MIME_EXT[file.mimetype];
         cb(null, `${Date.now()}-${req.user.sub}${ext}`);
     }
 });
@@ -22,7 +29,11 @@ const upload = multer({
     storage,
     limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
-        cb(null, file.mimetype.startsWith('image/'));
+        if (ALLOWED_MIME_EXT[file.mimetype]) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only JPEG, PNG, WebP, and GIF images are allowed'));
+        }
     }
 });
 
@@ -400,7 +411,7 @@ router.patch('/:id', authenticate, asyncHandler(async (req, res) => {
     if (!spot) {
         return res.status(404).json({ code: 'NOT_FOUND', message: 'Spot not found' });
     }
-    if (spot.user_id !== req.user.sub) {
+    if (Number(spot.user_id) !== Number(req.user.sub)) {
         return res.status(403).json({ code: 'FORBIDDEN', message: 'Not the owner' });
     }
     const { title, description, seasonTag, weatherTag } = req.body;
@@ -409,6 +420,33 @@ router.patch('/:id', authenticate, asyncHandler(async (req, res) => {
     }
     const updated = await spots.update(id, { title: title.trim(), description, seasonTag, weatherTag });
     return res.json(updated);
+}));
+
+/**
+ * @swagger
+ * /api/spots/{id}/photos:
+ *   get:
+ *     summary: List all photos for a spot
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: integer }
+ *     responses:
+ *       200: { description: Photo list }
+ *       400: { description: Invalid spot id }
+ */
+router.get('/:id/photos', asyncHandler(async (req, res) => {
+    const spotId = Number.parseInt(req.params.id, 10);
+    if (Number.isNaN(spotId)) {
+        return res.status(400).json({ code: 'INVALID_SPOT_ID', message: 'Spot id must be a number' });
+    }
+    const spot = await spots.findById(spotId);
+    if (!spot) {
+        return res.status(404).json({ code: 'NOT_FOUND', message: 'Spot not found' });
+    }
+    const list = await photos.getBySpot(spotId);
+    return res.json(list);
 }));
 
 /**
@@ -447,7 +485,7 @@ router.post('/:id/photos', authenticate, upload.single('photo'), asyncHandler(as
     if (!spot) {
         return res.status(404).json({ code: 'NOT_FOUND', message: 'Spot not found' });
     }
-    if (spot.user_id !== req.user.sub) {
+    if (Number(spot.user_id) !== Number(req.user.sub)) {
         return res.status(403).json({ code: 'FORBIDDEN', message: 'Not the owner' });
     }
     if (!req.file) {
