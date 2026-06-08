@@ -15,11 +15,12 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc:  ["'self'"],
-            scriptSrc:   ["'self'", 'dapi.kakao.com'],
+            scriptSrc:   ["'self'", "'unsafe-inline'", 'dapi.kakao.com', '*.kakao.com', '*.daumcdn.net'],
+            styleSrc:    ["'self'", "'unsafe-inline'"],
             frameSrc:    ["'none'"],
             objectSrc:   ["'none'"],
             imgSrc:      ["'self'", 'data:', '*.kakao.com', '*.daumcdn.net'],
-            connectSrc:  ["'self'", 'dapi.kakao.com'],
+            connectSrc:  ["'self'", 'dapi.kakao.com', '*.kakao.com'],
         },
     },
 }));
