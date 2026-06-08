@@ -52,7 +52,7 @@ async function remove(req, res) {
         });
     }
 
-    if (spot.user_id !== req.user.sub) {
+    if (Number(spot.user_id) !== Number(req.user.sub)) {
         return res.status(403).json({
             code: "FORBIDDEN",
             message: "You are not the owner of this spot"

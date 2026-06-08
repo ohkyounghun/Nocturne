@@ -11,14 +11,29 @@ const usersRouter = require('./routes/users');
 
 const app = express();
 
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc:  ["'self'"],
+            scriptSrc:   ["'self'", 'dapi.kakao.com'],
+            frameSrc:    ["'none'"],
+            objectSrc:   ["'none'"],
+            imgSrc:      ["'self'", 'data:', '*.kakao.com', '*.daumcdn.net'],
+            connectSrc:  ["'self'", 'dapi.kakao.com'],
+        },
+    },
+}));
 app.use(express.json());
 
 // Serve static files from the client folder
 app.use(express.static(path.join(__dirname, '../client')));
 
-// Serve uploaded images
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve uploaded images — set explicit headers to prevent script execution
+app.use('/uploads', (req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Security-Policy', "default-src 'none'");
+    next();
+}, express.static(path.join(__dirname, 'uploads')));
 
 // Swagger UI (interactive docs) + raw OpenAPI spec endpoint
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
