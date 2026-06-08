@@ -44,6 +44,9 @@ a:hover {
     padding: 16px 24px;
     background-color: #070a14;
     border-bottom: 1px solid #c9a84c;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .header-left {
@@ -303,22 +306,97 @@ a:hover {
 }
 
 /* ------------------------------------------------------------
-   Spot Detail
+   Spot Detail — 2-column layout
    ------------------------------------------------------------ */
-.spot-hero {
-    padding: 20px 20px 0 20px;
+.detail-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
 }
 
-.spot-hero img {
-    width: 720px;
-    max-width: 100%;
-    height: auto;
-    object-fit: contain;
-    display: block;
-}
-
-.spot-info {
+/* Left: gallery + meta */
+.detail-left {
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gallery-main {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #0d1226;
+    border: 1px solid #1a2040;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.2s;
+}
+
+.gallery-thumbs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.gallery-thumb {
+    width: 72px;
+    height: 54px;
+    object-fit: cover;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    opacity: 0.65;
+    transition: opacity 0.15s, border-color 0.15s;
+}
+
+.gallery-thumb:hover,
+.gallery-thumb.active {
+    opacity: 1;
+    border-color: #c9a84c;
+}
+
+.gallery-upload-btn {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 7px 16px;
+    border: 1px dashed #2a3060;
+    color: #666680;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+}
+
+.gallery-upload-btn:hover {
+    border-color: #c9a84c;
+    color: #c9a84c;
+}
+
+/* Left: title/tags/desc below gallery */
+.detail-meta {
+    margin-top: 8px;
+}
+
+.detail-meta h1 {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+/* Right: map + address + actions + comments */
+.detail-right {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .spot-info h1 {
@@ -363,14 +441,6 @@ a:hover {
     border-radius: 2px;
 }
 
-.spot-stats {
-    display: flex;
-    gap: 16px;
-    margin: 12px 0;
-    color: #666680;
-    font-size: 0.85rem;
-    flex-wrap: wrap;
-}
 
 .spot-actions {
     display: flex;
@@ -409,14 +479,15 @@ a:hover {
 }
 
 /* ------------------------------------------------------------
-   Comments
+   Comments (오른쪽 컬럼 내부)
    ------------------------------------------------------------ */
-.comments {
-    padding: 20px;
+.detail-comments {
+    margin-top: 24px;
+    padding-top: 24px;
     border-top: 1px solid #1a2040;
 }
 
-.comments h2 {
+.detail-comments h2 {
     font-size: 0.85rem;
     font-weight: 500;
     letter-spacing: 2px;
@@ -637,12 +708,52 @@ a:hover {
     display: none;
 }
 
-.photo-preview {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
+.photo-preview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.photo-preview-item {
+    position: relative;
+    width: 96px;
+    height: 72px;
     border: 1px solid #2a3060;
-    margin-top: 8px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.photo-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.photo-preview-remove {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 18px;
+    height: 18px;
+    background: rgba(0, 0, 0, 0.7);
+    border: none;
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 2px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.photo-preview-item:hover .photo-preview-remove {
+    opacity: 1;
 }
 
 /* submit button */
@@ -930,14 +1041,21 @@ a:hover {
         height: 65vh;
     }
 
-    .spot-info {
-        padding: 32px;
-        max-width: 720px;
+    .detail-layout {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
     }
 
-    .comments {
-        padding: 32px;
-        max-width: 720px;
+    .detail-left {
+        position: sticky;
+        top: 60px;
+        align-self: start;
+        padding: 28px 20px 28px 28px;
+    }
+
+    .detail-right {
+        padding: 28px 28px 28px 20px;
+        border-left: 1px solid #1a2040;
     }
 }
 

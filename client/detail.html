@@ -20,59 +20,59 @@
         <div class="header-right">
             <a href="login.html" id="nav-login" class="nav-link">Login</a>
             <a href="my-spots.html" id="nav-myspots" class="nav-link hidden">My Spots</a>
-        <button id="nav-logout" class="hidden">Logout</button>
+            <button id="nav-logout" class="hidden">Logout</button>
         </div>
     </header>
 
-    <!-- Spot Hero Image -->
-    <section class="spot-hero">
-        <!-- src filled by spotDetail.js -->
-        <img id="spot-image" src="" alt="Spot image">
-    </section>
+    <div class="detail-layout">
 
-    <!-- Spot Info -->
-    <section class="spot-info">
-        <!-- filled by spotDetail.js -->
-        <h1 id="spot-title"></h1>
-        <p id="spot-address" class="spot-address"></p>
-        <div class="spot-tags">
-            <span id="spot-season"></span>
-            <span id="spot-weather"></span>
-        </div>
-        <div class="spot-stats">
-            <!-- counts filled by spotDetail.js -->
-            <span id="spot-likes"></span>
-            <span id="spot-comments"></span>
-        </div>
-        <p id="spot-description"></p>
+        <!-- Left: Gallery + Title + Tags + Description -->
+        <aside class="detail-left">
+            <div class="gallery-main">
+                <img id="gallery-main-img" src="" alt="Spot photo">
+            </div>
+            <div class="gallery-thumbs" id="gallery-thumbs"></div>
+            <div id="gallery-upload-wrap" class="hidden">
+                <label class="gallery-upload-btn" for="gallery-file-input">+ Add Photo</label>
+                <input type="file" id="gallery-file-input" accept="image/*" multiple class="hidden">
+            </div>
 
-        <div class="spot-location">
-            <div id="spot-map" aria-label="Spot location map"></div>
-        </div>
+            <div class="detail-meta">
+                <h1 id="spot-title"></h1>
+                <div class="spot-tags">
+                    <span id="spot-season"></span>
+                    <span id="spot-weather"></span>
+                </div>
+                <p id="spot-description"></p>
+            </div>
+        </aside>
 
-        <!-- Like, Bookmark, Delete buttons -->
-        <div class="spot-actions">
-            <button id="btn-like">Like</button>
-            <button id="btn-bookmark">Bookmark</button>
-            <button id="btn-delete-spot" class="btn--danger hidden">Delete Spot</button>
-        </div>
-    </section>
+        <!-- Right: Map + Address + Actions + Comments -->
+        <section class="detail-right">
+            <div class="spot-location">
+                <div id="spot-map" aria-label="Spot location map"></div>
+            </div>
+            <p id="spot-address" class="spot-address"></p>
 
-    <!-- Comments -->
-    <section class="comments">
-        <h2>Comments</h2>
-        <ul id="comment-list">
-            <!-- comments rendered by spotDetail.js -->
-        </ul>
-        <div class="comment-form">
-            <!-- label required for accessibility, hidden visually -->
-            <label for="comment-input" class="hidden">Comment</label>
-            <textarea id="comment-input" placeholder="Add a comment..."></textarea>
-            <button id="btn-comment">Post</button>
-        </div>
-    </section>
+            <div class="spot-actions">
+                <button id="btn-like">Like</button>
+                <button id="btn-bookmark">Bookmark</button>
+                <button id="btn-delete-spot" class="btn--danger hidden">Delete Spot</button>
+            </div>
 
-    <!-- Scripts -->
+            <div class="detail-comments">
+                <h2>Comments</h2>
+                <ul id="comment-list"></ul>
+                <div class="comment-form">
+                    <label for="comment-input" class="hidden">Comment</label>
+                    <textarea id="comment-input" placeholder="Add a comment..."></textarea>
+                    <button id="btn-comment">Post</button>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
     <script type="module" src="js/spotDetail.js"></script>
 
 </body>
