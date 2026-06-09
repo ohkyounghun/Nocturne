@@ -544,6 +544,27 @@
       }
     },
     "/api/spots/{id}/photos": {
+      "get": {
+        "summary": "List all photos for a spot",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Photo list"
+          },
+          "400": {
+            "description": "Invalid spot id"
+          }
+        }
+      },
       "post": {
         "summary": "Upload a photo for a spot (owner only)",
         "security": [

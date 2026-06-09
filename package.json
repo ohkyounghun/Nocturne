@@ -21,6 +21,12 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/.claude/"
+    ]
+  },
   "bugs": {
     "url": "https://github.com/ohkyounghun/Nocturne/issues"
   },

@@ -129,7 +129,7 @@ npm test -- --runInBand
 
 The test suite covers controller behavior and Supertest API flows, including
 login, unauthenticated comment requests, spot listing, and duplicate
-like/bookmark conflicts. The current suite contains 4 suites and 15 tests.
+like/bookmark conflicts. The current suite contains 4 suites and 17 tests.
 
 GitHub Actions runs the same `npm test` command for every pull request targeting
 `main` and every push to `main` using Node.js 20.
